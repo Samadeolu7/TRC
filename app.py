@@ -224,9 +224,34 @@ class UpcomingServicesList(Resource):
             'message': 'The upcoming service does not exist'
         }
     
+@app.route('/api-guide', methods=['GET'])
+def api_guide():
+    guide = {
+        "/liveservices": {
+            "GET": "Returns a list of all live services",
+            "POST": "Creates a new live service",
+            "DELETE": "Deletes a live service",
+            "PUT": "Updates a live service"
+        },
+        "/majorevents": {
+            "GET": "Returns a list of all major events",
+            "POST": "Creates a new major event",
+            "DELETE": "Deletes a major event",
+            "PUT": "Updates a major event"
+        },
+        "/upcomingevents": {
+            "GET": "Returns a list of all upcoming services",
+            "POST": "Creates a new upcoming service",
+            "DELETE": "Deletes an upcoming service",
+            "PUT": "Updates an upcoming service"
+        }
+    }
+    return guide
+    
 api.add_resource(LiveServiceList, '/liveservices')
 api.add_resource(MajorEventsList, '/majorevents')
 api.add_resource(UpcomingServicesList, '/upcomingevents')
+api.add_resource(api_guide, '/api-guide')
 
 
 if __name__ == '__main__':
