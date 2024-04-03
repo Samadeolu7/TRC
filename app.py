@@ -224,7 +224,7 @@ class UpcomingServicesList(Resource):
             'message': 'The upcoming service does not exist'
         }
     
-@app.route('/api-guide', methods=['GET'])
+
 class ApiGuide(Resource):
     def get(self):
         guide = {
@@ -252,7 +252,7 @@ class ApiGuide(Resource):
 api.add_resource(LiveServiceList, '/liveservices')
 api.add_resource(MajorEventsList, '/majorevents')
 api.add_resource(UpcomingServicesList, '/upcomingevents')
-api.add_resource(ApiGuide, '/api-guide')
+api.add_resource(ApiGuide, '/')
 
 
 if __name__ == '__main__':
