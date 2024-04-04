@@ -249,6 +249,7 @@ class ApiGuide(Resource):
         }
         return guide
     
+    
 api.add_resource(LiveServiceList, '/liveservices')
 api.add_resource(MajorEventsList, '/majorevents')
 api.add_resource(UpcomingServicesList, '/upcomingevents')
