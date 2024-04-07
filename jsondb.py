@@ -27,7 +27,8 @@ data = {
     "Event": [],
     "Sermons": [],
     "MajorEvents": [],
-    "Guest": []
+    "Guest": [],
+    "UpcomingServices": []
 }
 
 # Create dummy data
