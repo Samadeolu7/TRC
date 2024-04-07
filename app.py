@@ -1,7 +1,5 @@
 from flask import Flask, jsonify
 from flask_restful import Api, Resource, reqparse, marshal_with, fields
-from models import LiveService, live_services_schema,MajorService,Event,Sermons,MajorEvents
-from models import db
 from flask_jwt_extended import JWTManager, jwt_required
 from dotenv import load_dotenv
 import os, json
