@@ -1,11 +1,10 @@
-from flask import Flask, jsonify
+from flask import Flask
 from flask_restful import Api, Resource, reqparse, marshal_with, fields
 from models import LiveService, live_services_schema,MajorService,Event,Sermons,MajorEvents
 from models import db
 from flask_jwt_extended import JWTManager, jwt_required
 from dotenv import load_dotenv
-import os, json
-from jsondb import JsonDB
+import os
 
 load_dotenv()
 
@@ -17,10 +16,6 @@ jwt = JWTManager(app)
 
 api = Api(app)
 
-
-db = JsonDB('data.json')
-
-
 resource_fields = {
     'id': fields.Integer,
     'name': fields.String,
@@ -29,17 +24,13 @@ resource_fields = {
     'is_active': fields.Boolean
 }
 
-# class LiveServiceList(Resource):
-#     def get(self):
-#         live_services = LiveService.query.all()
-#         return live_services_schema.dump(live_services)
-
 class LiveServiceList(Resource):
     def get(self):
-        data = db.read()
-        live_services = data['LiveService']
-        return jsonify(live_services)
-
+        live_services = LiveService.query.all()
+        return live_services_schema.dump(live_services)
+    
+     
+    @marshal_with(resource_fields)
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, required=True)
@@ -47,35 +38,35 @@ class LiveServiceList(Resource):
         parser.add_argument('url', type=str, required=True)
         parser.add_argument('is_active', type=bool, required=True)
         data = parser.parse_args()
-
-        new_live_service = {
-            "id": len(db.read()['LiveService']) + 1,  # Assign new id
-            "name": data['name'],
-            "description": data['description'],
-            "url": data['url'],
-            "is_active": data['is_active']
-        }
-
-        current_data = db.read()
-        current_data['LiveService'].append(new_live_service)
-        db.write(current_data)
-
-        return new_live_service, 201
-
+        
+        new_live_service = LiveService(
+            name=data['name'],
+            description=data['description'],
+            url=data['url'],
+            is_active=data['is_active']
+        )
+        db.session.add(new_live_service)
+        db.session.commit()
+        return live_services_schema.dump(new_live_service)
+    
+     
     def delete(self):
         parser = reqparse.RequestParser()
         parser.add_argument('id', type=int, required=True)
         data = parser.parse_args()
-
-        current_data = db.read()
-        live_service = next((item for item in current_data['LiveService'] if item['id'] == data['id']), None)
+        
+        live_service = LiveService.query.get(data['id'])
         if live_service:
-            current_data['LiveService'].remove(live_service)
-            db.write(current_data)
-            return {'message': 'The live service has been deleted'}, 200
-
-        return {'message': 'The live service does not exist'}, 404
-
+            db.session.delete(live_service)
+            db.session.commit()
+            return {
+                'message': 'The live service has been deleted'
+            }
+        return {
+            'message': 'The live service does not exist'
+        }
+    
+     
     def put(self):
         parser = reqparse.RequestParser()
         parser.add_argument('id', type=int, required=True)
@@ -84,26 +75,26 @@ class LiveServiceList(Resource):
         parser.add_argument('url', type=str, required=True)
         parser.add_argument('is_active', type=bool, required=True)
         data = parser.parse_args()
-
-        current_data = db.read()
-        live_service = next((item for item in current_data['LiveService'] if item['id'] == data['id']), None)
+        
+        live_service = LiveService.query.get(data['id'])
         if live_service:
-            live_service['name'] = data['name']
-            live_service['description'] = data['description']
-            live_service['url'] = data['url']
-            live_service['is_active'] = data['is_active']
-            db.write(current_data)
-            return live_service, 200
-
-        return {'message': 'The live service does not exist'}, 404
-
-
+            live_service.name = data['name']
+            live_service.description = data['description']
+            live_service.url = data['url']
+            live_service.is_active = data['is_active']
+            db.session.commit()
+            return live_services_schema.dump(live_service)
+        return {
+            'message': 'The live service does not exist'
+        }
+    
 class MajorEventsList(Resource):
     def get(self):
-        data = db.read()
-        major_events = data['MajorEvents']
-        return jsonify(major_events)
-
+        major_events = MajorEvents.query.all()
+        return live_services_schema.dump(major_events)
+    
+     
+    @marshal_with(resource_fields)
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, required=True)
@@ -113,37 +104,40 @@ class MajorEventsList(Resource):
         parser.add_argument('date', type=str, required=True)
         parser.add_argument('url', type=str, required=True)
         data = parser.parse_args()
-
-        new_major_event = {
-            "id": len(db.read()['MajorEvents']) + 1,  # Assign new id
-            "name": data['name'],
-            "description": data['description'],
-            "image": data['image'],
-            "list_of_guests": data['list_of_guests'],
-            "date": data['date'],
-            "url": data['url']
-        }
-
-        current_data = db.read()
-        current_data['MajorEvents'].append(new_major_event)
-        db.write(current_data)
-
-        return new_major_event, 201
-
+        
+        new_major_event = MajorEvents(
+            name=data['name'],
+            description=data['description'],
+            image=data['image'],
+            list_of_guests=data['list_of_guests'],
+            date=data['date'],
+            url=data['url']
+        )
+        db.session.add(new_major_event)
+        db.session.commit()
+        return live_services_schema.dump(new_major_event)
+    
+     
     def delete(self):
         parser = reqparse.RequestParser()
         parser.add_argument('id', type=int, required=True)
         data = parser.parse_args()
-
-        current_data = db.read()
-        major_event = next((item for item in current_data['MajorEvents'] if item['id'] == data['id']), None)
+        
+        major_event = MajorEvents.query.get(data['id'])
         if major_event:
-            current_data['MajorEvents'].remove(major_event)
-            db.write(current_data)
-            return {'message': 'The major event has been deleted'}, 200
-
-        return {'message': 'The major event does not exist'}, 404
-
+            #delete all guests
+            for guest in major_event.list_of_guests:
+                db.session.delete(guest)
+            db.session.delete(major_event)
+            db.session.commit()
+            return {
+                'message': 'The major event has been deleted'
+            }
+        return {
+            'message': 'The major event does not exist'
+        }
+    
+     
     def put(self):
         parser = reqparse.RequestParser()
         parser.add_argument('id', type=int, required=True)
@@ -154,27 +148,24 @@ class MajorEventsList(Resource):
         parser.add_argument('date', type=str, required=True)
         parser.add_argument('url', type=str, required=True)
         data = parser.parse_args()
-
-        current_data = db.read()
-        major_event = next((item for item in current_data['MajorEvents'] if item['id'] == data['id']), None)
+        
+        major_event = MajorEvents.query.get(data['id'])
         if major_event:
-            major_event['name'] = data['name']
-            major_event['description'] = data['description']
-            major_event['image'] = data['image']
-            major_event['list_of_guests'] = data['list_of_guests']
-            major_event['date'] = data['date']
-            major_event['url'] = data['url']
-            db.write(current_data)
-            return major_event, 200
-
-        return {'message': 'The major event does not exist'}, 404
+            major_event.name = data['name']
+            major_event.description = data['description']
+            major_event.image = data['image']
+            major_event.list_of_guests = data['list_of_guests']
+            major_event.date = data['date']
+            major_event.url = data['url']
+            db.session.commit()
 
 class UpcomingServicesList(Resource):
     def get(self):
-        data = db.read()
-        upcoming_services = data['UpcomingServices']
-        return jsonify(upcoming_services)
-
+        upcoming_services = MajorService.query.all()
+        return live_services_schema.dump(upcoming_services)
+    
+     
+    @marshal_with(resource_fields)
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, required=True)
@@ -182,35 +173,36 @@ class UpcomingServicesList(Resource):
         parser.add_argument('day', type=str, required=True)
         parser.add_argument('time', type=str, required=True)
         data = parser.parse_args()
-
-        new_upcoming_service = {
-            "id": len(db.read()['UpcomingServices']) + 1,  # Assign new id
-            "name": data['name'],
-            "description": data['description'],
-            "day": data['day'],
-            "time": data['time']
-        }
-
-        current_data = db.read()
-        current_data['UpcomingServices'].append(new_upcoming_service)
-        db.write(current_data)
-
-        return new_upcoming_service, 201
-
+        
+        new_upcoming_service = MajorService(
+            name=data['name'],
+            description=data['description'],
+            day=data['day'],
+            time=data['time']
+        )
+        db.session.add(new_upcoming_service)
+        db.session.commit()
+        return live_services_schema.dump(new_upcoming_service)
+    
+     
     def delete(self):
         parser = reqparse.RequestParser()
         parser.add_argument('id', type=int, required=True)
         data = parser.parse_args()
-
-        current_data = db.read()
-        upcoming_service = next((item for item in current_data['UpcomingServices'] if item['id'] == data['id']), None)
+        
+        upcoming_service = MajorService.query.get(data['id'])
         if upcoming_service:
-            current_data['UpcomingServices'].remove(upcoming_service)
-            db.write(current_data)
-            return {'message': 'The upcoming service has been deleted'}, 200
-
-        return {'message': 'The upcoming service does not exist'}, 404
-
+            db.session.delete(upcoming_service)
+            db.session.commit()
+            return {
+                'message': 'The upcoming service has been deleted'
+            }
+        return {
+            'message': 'The upcoming service does not exist'
+        }
+    
+     
+    @marshal_with(resource_fields)
     def put(self):
         parser = reqparse.RequestParser()
         parser.add_argument('id', type=int, required=True)
@@ -219,18 +211,19 @@ class UpcomingServicesList(Resource):
         parser.add_argument('day', type=str, required=True)
         parser.add_argument('time', type=str, required=True)
         data = parser.parse_args()
-
-        current_data = db.read()
-        upcoming_service = next((item for item in current_data['UpcomingServices'] if item['id'] == data['id']), None)
+        
+        upcoming_service = MajorService.query.get(data['id'])
         if upcoming_service:
-            upcoming_service['name'] = data['name']
-            upcoming_service['description'] = data['description']
-            upcoming_service['day'] = data['day']
-            upcoming_service['time'] = data['time']
-            db.write(current_data)
-            return upcoming_service, 200
-
-        return {'message': 'The upcoming service does not exist'}, 404    
+            upcoming_service.name = data['name']
+            upcoming_service.description = data['description']
+            upcoming_service.day = data['day']
+            upcoming_service.time = data['time']
+            db.session.commit()
+            return live_services_schema.dump(upcoming_service)
+        return {
+            'message': 'The upcoming service does not exist'
+        }
+    
 
 class ApiGuide(Resource):
     def get(self):
