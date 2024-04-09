@@ -99,6 +99,7 @@ class LiveServiceList(Resource):
 
 
 class MajorEventsList(Resource):
+    #He only needs 3 most prominent major events
     def get(self):
         data = db.read()
         major_events = data['MajorEvents']
@@ -249,9 +250,9 @@ class ApiGuide(Resource):
         return guide
     
     
-api.add_resource(LiveServiceList, '/liveservices/<id>')
-api.add_resource(MajorEventsList, '/majorevents/<id>')
-api.add_resource(UpcomingServicesList, '/upcomingevents/<id>')
+api.add_resource(LiveServiceList, '/liveservices', '/liveservices/<int:id>')
+api.add_resource(MajorEventsList, '/majorevents', '/majorevents/<int:id>')
+api.add_resource(UpcomingServicesList, '/upcomingevents', '/upcomingevents/<int:id>')
 api.add_resource(ApiGuide, '/')
 
 
