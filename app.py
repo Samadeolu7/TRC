@@ -76,17 +76,21 @@ class LiveServiceList(Resource):
 
         return {'message': 'The live service does not exist'}, 404
 
-    def put(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, required=True)
-        parser.add_argument('name', type=str, required=True)
-        parser.add_argument('description', type=str, required=True)
-        parser.add_argument('url', type=str, required=True)
-        parser.add_argument('is_active', type=bool, required=True)
-        data = parser.parse_args()
+    from flask_restful import reqparse
+
+    def put(self, id):
+        parser = reqparse.RequestParser()  # initialize parser
+
+        # add arguments to parser
+        parser.add_argument('name', required=True)
+        parser.add_argument('description', required=True)
+        parser.add_argument('url', required=True)
+        parser.add_argument('is_active', required=True, type=bool)
+
+        data = parser.parse_args()  # parse incoming request data
 
         current_data = db.read()
-        live_service = next((item for item in current_data['LiveService'] if item['id'] == data['id']), None)
+        live_service = next((item for item in current_data['LiveService'] if item['id'] == id), None)
         if live_service:
             live_service['name'] = data['name']
             live_service['description'] = data['description']
@@ -141,9 +145,8 @@ class MajorEventsList(Resource):
 
         return {'message': 'The major event does not exist'}, 404
 
-    def put(self):
+    def put(self,id):
         parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, required=True)
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('description', type=str, required=True)
         parser.add_argument('image', type=str, required=True)
@@ -153,7 +156,7 @@ class MajorEventsList(Resource):
         data = parser.parse_args()
 
         current_data = db.read()
-        major_event = next((item for item in current_data['MajorEvents'] if item['id'] == data['id']), None)
+        major_event = next((item for item in current_data['MajorEvents'] if item['id'] == id), None)
         if major_event:
             major_event['name'] = data['name']
             major_event['description'] = data['description']
@@ -204,9 +207,8 @@ class UpcomingServicesList(Resource):
 
         return {'message': 'The upcoming service does not exist'}, 404
 
-    def put(self):
+    def put(self,id):
         parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, required=True)
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('description', type=str, required=True)
         parser.add_argument('day', type=str, required=True)
@@ -214,7 +216,7 @@ class UpcomingServicesList(Resource):
         data = parser.parse_args()
 
         current_data = db.read()
-        upcoming_service = next((item for item in current_data['UpcomingServices'] if item['id'] == data['id']), None)
+        upcoming_service = next((item for item in current_data['UpcomingServices'] if item['id'] == id), None)
         if upcoming_service:
             upcoming_service['name'] = data['name']
             upcoming_service['description'] = data['description']
