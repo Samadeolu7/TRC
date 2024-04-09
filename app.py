@@ -65,13 +65,10 @@ class LiveServiceList(Resource):
 
         return new_live_service, 201
 
-    def delete(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, required=True)
-        data = parser.parse_args()
+    def delete(self,id):
 
         current_data = db.read()
-        live_service = next((item for item in current_data['LiveService'] if item['id'] == data['id']), None)
+        live_service = next((item for item in current_data['LiveService'] if item['id'] == id), None)
         if live_service:
             current_data['LiveService'].remove(live_service)
             db.write(current_data)
@@ -133,13 +130,9 @@ class MajorEventsList(Resource):
 
         return new_major_event, 201
 
-    def delete(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, required=True)
-        data = parser.parse_args()
-
+    def delete(self,id):
         current_data = db.read()
-        major_event = next((item for item in current_data['MajorEvents'] if item['id'] == data['id']), None)
+        major_event = next((item for item in current_data['MajorEvents'] if item['id'] == id), None)
         if major_event:
             current_data['MajorEvents'].remove(major_event)
             db.write(current_data)
@@ -200,13 +193,9 @@ class UpcomingServicesList(Resource):
 
         return new_upcoming_service, 201
 
-    def delete(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, required=True)
-        data = parser.parse_args()
-
+    def delete(self, id):
         current_data = db.read()
-        upcoming_service = next((item for item in current_data['UpcomingServices'] if item['id'] == data['id']), None)
+        upcoming_service = next((item for item in current_data['UpcomingServices'] if item['id'] == id), None)
         if upcoming_service:
             current_data['UpcomingServices'].remove(upcoming_service)
             db.write(current_data)
@@ -260,9 +249,9 @@ class ApiGuide(Resource):
         return guide
     
     
-api.add_resource(LiveServiceList, '/liveservices')
-api.add_resource(MajorEventsList, '/majorevents')
-api.add_resource(UpcomingServicesList, '/upcomingevents')
+api.add_resource(LiveServiceList, '/liveservices/<id>')
+api.add_resource(MajorEventsList, '/majorevents/<id>')
+api.add_resource(UpcomingServicesList, '/upcomingevents/<id>')
 api.add_resource(ApiGuide, '/')
 
 
