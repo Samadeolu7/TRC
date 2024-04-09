@@ -37,6 +37,8 @@ data["LiveService"].append({
     "name": 'Sunday Service',
     "description": 'Sunday Service',
     "url": 'https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+    "time": '6:00 PM',
+    "date": '2020-12-25',
     "is_active": True
 })
 
@@ -45,6 +47,8 @@ data["LiveService"].append({
     "name": 'Wednesday Service',
     "description": 'Wednesday Service',
     "url": 'https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+    "time": '6:00 PM',
+    "date": '2020-12-25',
     "is_active": True
 })
 
@@ -53,6 +57,8 @@ data["LiveService"].append({
     "name": 'Friday Service',
     "description": 'Friday Service',
     "url": 'https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+    "time": '6:00 PM',
+    "date": '2020-12-25',
     "is_active": True
 })
 

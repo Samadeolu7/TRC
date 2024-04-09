@@ -54,6 +54,8 @@ class LiveServiceList(Resource):
             "name": data['name'],
             "description": data['description'],
             "url": data['url'],
+            "time": data['time'],
+            "date": data['date'],
             "is_active": data['is_active']
         }
 
@@ -110,7 +112,7 @@ class MajorEventsList(Resource):
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('description', type=str, required=True)
         parser.add_argument('image', type=str, required=True)
-        parser.add_argument('list_of_guests', type=str, required=True)
+        parser.add_argument('guests', type=str, required=True)
         parser.add_argument('date', type=str, required=True)
         parser.add_argument('url', type=str, required=True)
         data = parser.parse_args()
@@ -120,7 +122,7 @@ class MajorEventsList(Resource):
             "name": data['name'],
             "description": data['description'],
             "image": data['image'],
-            "list_of_guests": data['list_of_guests'],
+            "guests": data['guests'],
             "date": data['date'],
             "url": data['url']
         }
@@ -151,7 +153,7 @@ class MajorEventsList(Resource):
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('description', type=str, required=True)
         parser.add_argument('image', type=str, required=True)
-        parser.add_argument('list_of_guests', type=str, required=True)
+        parser.add_argument('guests', type=str, required=True)
         parser.add_argument('date', type=str, required=True)
         parser.add_argument('url', type=str, required=True)
         data = parser.parse_args()
@@ -162,7 +164,7 @@ class MajorEventsList(Resource):
             major_event['name'] = data['name']
             major_event['description'] = data['description']
             major_event['image'] = data['image']
-            major_event['list_of_guests'] = data['list_of_guests']
+            major_event['guests'] = data['guests']
             major_event['date'] = data['date']
             major_event['url'] = data['url']
             db.write(current_data)
