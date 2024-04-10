@@ -179,7 +179,7 @@ class UpcomingServicesList(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('description', type=str, required=True)
-        parser.add_argument('day', type=str, required=True)
+        parser.add_argument('date', type=str, required=True)
         parser.add_argument('time', type=str, required=True)
         data = parser.parse_args()
 
@@ -187,7 +187,7 @@ class UpcomingServicesList(Resource):
             "id": len(db.read()['UpcomingServices']) + 1,  # Assign new id
             "name": data['name'],
             "description": data['description'],
-            "day": data['day'],
+            "date": data['date'],
             "time": data['time']
         }
 
@@ -211,7 +211,7 @@ class UpcomingServicesList(Resource):
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('description', type=str, required=True)
-        parser.add_argument('day', type=str, required=True)
+        parser.add_argument('date', type=str, required=True)
         parser.add_argument('time', type=str, required=True)
         data = parser.parse_args()
 
@@ -220,7 +220,7 @@ class UpcomingServicesList(Resource):
         if upcoming_service:
             upcoming_service['name'] = data['name']
             upcoming_service['description'] = data['description']
-            upcoming_service['day'] = data['day']
+            upcoming_service['date'] = data['date']
             upcoming_service['time'] = data['time']
             db.write(current_data)
             return upcoming_service, 200
@@ -247,14 +247,87 @@ class ApiGuide(Resource):
                 "POST": "Creates a new upcoming service",
                 "DELETE": "Deletes an upcoming service",
                 "PUT": "Updates an upcoming service"
-            }
+            },
+            "/questions": {
+                "GET": "Returns a list of all questions",
+                "POST": "Creates a new question",
+                "DELETE": "Deletes a question",
+                "PUT": "Updates a question"
+            },
         }
         return guide
     
+class QuestionsList(Resource):
+    def get(self):
+        data = db.read()
+        questions = data['questions']
+        return jsonify(questions)
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('question', type=str, required=True)
+        parser.add_argument('cluster_id', type=int, required=True)
+        data = parser.parse_args()
+
+        new_question = {
+            "id": len(db.read()['questions']) + 1,  # Assign new id
+            "question": data['question'],
+            "cluster_id": data['cluster_id']
+        }
+
+        current_data = db.read()
+        current_data['questions'].append(new_question)
+        # Update the corresponding cluster's questions field
+        for cluster in current_data['clusters']:
+            if cluster['id'] == data['cluster_id']:
+                cluster['questions'].append(new_question['id'])
+                break
+        db.write(current_data)
+
+        return new_question, 201
+
+    def delete(self, id):
+        current_data = db.read()
+        question = next((item for item in current_data['questions'] if item['id'] == id), None)
+        if question:
+            current_data['questions'].remove(question)
+            # Remove the question's ID from the corresponding cluster's questions field
+            for cluster in current_data['clusters']:
+                if question['id'] in cluster['questions']:
+                    cluster['questions'].remove(question['id'])
+                    break
+            db.write(current_data)
+            return {'message': 'The question has been deleted'}, 200
+
+        return {'message': 'The question does not exist'}, 404
+
+    def put(self, id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('question', type=str, required=True)
+        parser.add_argument('cluster_id', type=int, required=True)
+        data = parser.parse_args()
+
+        current_data = db.read()
+        question = next((item for item in current_data['questions'] if item['id'] == id), None)
+        if question:
+            # If the cluster_id has changed, update the questions fields of the old and new clusters
+            if question['cluster_id'] != data['cluster_id']:
+                for cluster in current_data['clusters']:
+                    if question['id'] in cluster['questions']:
+                        cluster['questions'].remove(question['id'])
+                    if cluster['id'] == data['cluster_id']:
+                        cluster['questions'].append(question['id'])
+            question['question'] = data['question']
+            question['cluster_id'] = data['cluster_id']
+            db.write(current_data)
+            return question, 200
+
+        return {'message': 'The question does not exist'}, 404    
     
 api.add_resource(LiveServiceList, '/liveservices', '/liveservices/<int:id>')
 api.add_resource(MajorEventsList, '/majorevents', '/majorevents/<int:id>')
 api.add_resource(UpcomingServicesList, '/upcomingevents', '/upcomingevents/<int:id>')
+api.add_resource(QuestionsList, '/questions', '/questions/<int:id>')
 api.add_resource(ApiGuide, '/')
 
 

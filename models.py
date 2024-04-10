@@ -59,6 +59,22 @@ class Guest(db.Model):
     image = db.Column(db.String(200))
     major_event_id = db.Column(db.Integer, db.ForeignKey('major_events.id'))
 
+class Question(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    question = db.Column(db.String(200))
+    cluster_id = db.Column(db.Integer, db.ForeignKey('cluster.id'))
+
+class Cluster(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    questions = db.relationship('Question', backref='cluster')
+    answer_id = db.Column(db.Integer, db.ForeignKey('answer.id'))
+
+class Answer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    answer = db.Column(db.String(200))
+    clusters = db.relationship('Cluster', backref='answer')
+    
+
 
 class LiveServiceSchema(ma.Schema):
     class Meta:

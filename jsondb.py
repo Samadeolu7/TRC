@@ -28,8 +28,13 @@ data = {
     "Sermons": [],
     "MajorEvents": [],
     "Guest": [],
-    "UpcomingServices": []
+    "UpcomingServices": [],
+    "questions": [],
+    "clusters": [],
+    "answers": []
 }
+
+
 
 # Create dummy data
 data["LiveService"].append({
