@@ -227,35 +227,6 @@ class UpcomingServicesList(Resource):
 
         return {'message': 'The upcoming service does not exist'}, 404    
 
-class ApiGuide(Resource):
-    def get(self):
-        guide = {
-            "/liveservices": {
-                "GET": "Returns a list of all live services",
-                "POST": "Creates a new live service",
-                "DELETE": "Deletes a live service",
-                "PUT": "Updates a live service"
-            },
-            "/majorevents": {
-                "GET": "Returns a list of all major events",
-                "POST": "Creates a new major event",
-                "DELETE": "Deletes a major event",
-                "PUT": "Updates a major event"
-            },
-            "/upcomingevents": {
-                "GET": "Returns a list of all upcoming services",
-                "POST": "Creates a new upcoming service",
-                "DELETE": "Deletes an upcoming service",
-                "PUT": "Updates an upcoming service"
-            },
-            "/questions": {
-                "GET": "Returns a list of all questions",
-                "POST": "Creates a new question",
-                "DELETE": "Deletes a question",
-                "PUT": "Updates a question"
-            },
-        }
-        return guide
     
 class QuestionsList(Resource):
     def get(self):
@@ -266,13 +237,12 @@ class QuestionsList(Resource):
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('question', type=str, required=True)
-        parser.add_argument('cluster_id', type=int, required=True)
         data = parser.parse_args()
 
         new_question = {
             "id": len(db.read()['questions']) + 1,  # Assign new id
             "question": data['question'],
-            "cluster_id": data['cluster_id']
+            "cluster_id": None
         }
 
         current_data = db.read()
@@ -323,7 +293,96 @@ class QuestionsList(Resource):
             return question, 200
 
         return {'message': 'The question does not exist'}, 404    
-    
+
+
+class AnswersList(Resource):
+    def get(self):
+        data = db.read()
+        answers = data['answers']
+        return jsonify(answers)
+
+    def post(self):
+        parser = reqparse.RequestParser()
+        parser.add_argument('cluster_id', type=int, required=True)
+        parser.add_argument('question', type=str, required=True)
+        parser.add_argument('answer', type=str, required=True)
+        data = parser.parse_args()
+
+        new_answer = {
+            "id": len(db.read()['answers']) + 1,  # Assign new id
+            "cluster_id": data['cluster_id'],
+            "question": data['question'],
+            "answer": data['answer']
+        }
+
+        current_data = db.read()
+        current_data['answers'].append(new_answer)
+        db.write(current_data)
+
+        return new_answer, 201
+
+    def delete(self, id):
+        current_data = db.read()
+        answer = next((item for item in current_data['answers'] if item['id'] == id), None)
+        if answer:
+            current_data['answers'].remove(answer)
+            db.write(current_data)
+            return {'message': 'The answer has been deleted'}, 200
+
+        return {'message': 'The answer does not exist'}, 404
+
+    def put(self, id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('cluster_id', type=int, required=True)
+        parser.add_argument('question', type=str, required=True)
+        parser.add_argument('answer', type=str, required=True)
+        data = parser.parse_args()
+
+        current_data = db.read()
+        answer = next((item for item in current_data['answers'] if item['id'] == id), None)
+        if answer:
+            answer['question_id'] = data['question_id']
+            answer['answer'] = data['answer']
+            db.write(current_data)
+            return answer, 200
+
+        return {'message': 'The answer does not exist'}, 404
+
+class ApiGuide(Resource):
+    def get(self):
+        guide = {
+            "/liveservices": {
+                "GET": "Returns a list of all live services",
+                "POST": "Creates a new live service",
+                "DELETE": "Deletes a live service",
+                "PUT": "Updates a live service"
+            },
+            "/majorevents": {
+                "GET": "Returns a list of all major events",
+                "POST": "Creates a new major event",
+                "DELETE": "Deletes a major event",
+                "PUT": "Updates a major event"
+            },
+            "/upcomingevents": {
+                "GET": "Returns a list of all upcoming services",
+                "POST": "Creates a new upcoming service",
+                "DELETE": "Deletes an upcoming service",
+                "PUT": "Updates an upcoming service"
+            },
+            "/questions": {
+                "GET": "Returns a list of all questions",
+                "POST": "Creates a new question: Include the cluster_id in the request body for now to assign the question to a cluster",
+                "DELETE": "Deletes a question",
+                "PUT": "Updates a question"
+            },
+            "/answers": {
+                "GET": "Returns a list of all answers",
+                "POST": "Creates a new answer: Include the cluster_id in the request body to assign the answer to a cluster and the generalized question for the cluster",
+                "DELETE": "Deletes an answer",
+                "PUT": "Updates an answer"
+            }
+        }
+        return guide
 api.add_resource(LiveServiceList, '/liveservices', '/liveservices/<int:id>')
 api.add_resource(MajorEventsList, '/majorevents', '/majorevents/<int:id>')
 api.add_resource(UpcomingServicesList, '/upcomingevents', '/upcomingevents/<int:id>')
