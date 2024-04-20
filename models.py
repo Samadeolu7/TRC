@@ -62,19 +62,24 @@ class Guest(db.Model):
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     question = db.Column(db.String(200))
-    cluster_id = db.Column(db.Integer, db.ForeignKey('cluster.id'))
+    cluster_id = db.Column(db.Integer, db.ForeignKey('cluster.id'), nullable=False)
+    email = db.Column(db.String(200),nullable=True)
+    notified = db.Column(db.Boolean, default=False)
+
 
 class Cluster(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    gen_question = db.Column(db.String(200),nullable=True)
     questions = db.relationship('Question', backref='cluster')
-    answer_id = db.Column(db.Integer, db.ForeignKey('answer.id'))
+    answer_id = db.Column(db.Integer, db.ForeignKey('answer.id'),nullable=True)
+    answered = db.Column(db.Boolean, default=False)
+
 
 class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     answer = db.Column(db.String(200))
-    clusters = db.relationship('Cluster', backref='answer')
+    cluster = db.relationship('Cluster', backref='answer')
     
-
 
 class LiveServiceSchema(ma.Schema):
     class Meta:
@@ -82,6 +87,16 @@ class LiveServiceSchema(ma.Schema):
 
 live_service_schema = LiveServiceSchema()
 live_services_schema = LiveServiceSchema(many=True)
+
+class QuestionSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'question', 'cluster_id')
+
+class ClusterSchema(ma.Schema):
+    questions = ma.Nested(QuestionSchema, many=True)
+    
+    class Meta:
+        fields = ('id', 'gen_question', 'questions', 'answer_id')
 
 
 
@@ -135,6 +150,71 @@ if __name__ == '__main__':
         )
         db.session.add(new_major_event)
         db.session.commit()
+        
+        new_cluster = Cluster(
+            gen_question='How can I overcome peer pressure?',
+            answered=False
+        )
+        db.session.add(new_cluster)
+        db.session.commit()
+
+        new_question = Question(
+            question='How can I overcome peer pressure?',
+            cluster=new_cluster
+        )
+        db.session.add(new_question)
+        db.session.commit()
+
+        new_question = Question(
+            question='How can i make decisions not based on peer pressure?',
+            cluster=new_cluster
+        )
+        db.session.add(new_question)
+        db.session.commit()
+
+        new_cluster = Cluster(
+            gen_question='What is the purpose of my life?',
+            answered=False
+        )
+        db.session.add(new_cluster)
+        db.session.commit()
+
+        new_question = Question(
+            question='What is the purpose of my life?',
+            cluster=new_cluster
+        )
+        db.session.add(new_question)
+        db.session.commit()
+
+        new_question = Question(
+            question='How can I find my purpose in life?',
+            cluster=new_cluster
+        )
+        db.session.add(new_question)
+        db.session.commit()
+
+        new_cluster = Cluster(
+            gen_question='How can I strengthen my relationship with God?',
+            answered=False
+        )
+        db.session.add(new_cluster)
+        db.session.commit()
+
+        new_question = Question(
+            question='How can I strengthen my relationship with God?',
+            cluster=new_cluster
+        )
+        db.session.add(new_question)
+        db.session.commit()
+
+        new_question = Question(
+            question='How can I know God more?',
+            cluster=new_cluster
+        )
+        db.session.add(new_question)
+        db.session.commit()
+
+        
 
 
 if __name__ == '__main__':
