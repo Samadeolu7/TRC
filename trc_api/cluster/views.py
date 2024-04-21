@@ -1,9 +1,10 @@
 from flask import jsonify
 from flask_restful import Resource, reqparse
-from models import db, Cluster, Question, Answer
+from trc_api.cluster.model import Cluster, Question, Answer
 from cluster import QuestionMatcher
 from sqlalchemy.exc import SQLAlchemyError
 from trc_api import q_matcher
+from trc_api.database import db
 
 class QuestionsList(Resource):
     def __init__(self):

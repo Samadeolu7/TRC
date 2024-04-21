@@ -4,7 +4,7 @@ import tensorflow as tf
 import tensorflow_hub as hub
 from sklearn.metrics.pairwise import cosine_similarity
 from annoy import AnnoyIndex
-from trc_api.cluster.model import db, Question, Cluster
+from trc_api.cluster.model import Cluster
 
 class QuestionMatcher:
     def __init__(self, model_path):

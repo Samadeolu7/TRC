@@ -1,4 +1,7 @@
-from trc_api.database import ma, db
+import trc_api.database as models
+
+db = models.db
+ma = models.ma
 
 class LiveService(db.Model):
     id = db.Column(db.Integer, primary_key=True)

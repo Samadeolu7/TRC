@@ -1,6 +1,6 @@
 from flask_restful import Resource, marshal_with, reqparse, fields
 
-from models import LiveService, live_service_schema, live_services_schema, db
+from trc_api.liveservices.model import LiveService, live_service_schema, live_services_schema, db
 
 
 resource_fields = {
@@ -15,7 +15,7 @@ resource_fields = {
 class LiveServiceList(Resource):
     def get(self):
         live_services = LiveService.query.all()
-        return live_service_schema.dump(live_services)
+        return live_services_schema.dump(live_services)
     
      
     @marshal_with(resource_fields)

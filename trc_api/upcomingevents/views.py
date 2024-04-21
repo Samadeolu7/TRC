@@ -1,5 +1,5 @@
 from flask_restful import Resource, reqparse, fields, marshal_with
-from trc_api.models import db
+from trc_api.database import db
 from trc_api.upcomingevents.model import MajorService
 from trc_api.liveservices.model import LiveService, live_services_schema
 

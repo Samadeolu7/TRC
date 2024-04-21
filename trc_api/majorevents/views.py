@@ -1,6 +1,7 @@
-from trc_api import db
+from trc_api.database import db
 from flask_restful import Resource, reqparse, fields, marshal_with
-from models import MajorEvents, live_service_schema, live_services_schema
+from trc_api.majorevents.model import MajorEvents
+from trc_api.liveservices.model import live_services_schema
 
 resource_fields = {
     'id': fields.Integer,
