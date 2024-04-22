@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import Flask
 from dotenv import load_dotenv
 from flask_marshmallow import Marshmallow
@@ -5,7 +6,7 @@ from flask_restful import Api
 from flask_sqlalchemy import SQLAlchemy
 from trc_api.liveservices.model import LiveService
 from trc_api.majorevents.model import MajorEvents
-from trc_api.upcomingevents.model import MajorService, Event
+from trc_api.upcomingevents.model import MajorService, Events
 from trc_api.cluster.model import Cluster, Question
 from trc_api.database import db, ma, app
 
@@ -55,7 +56,7 @@ with app.app_context():
             name='Youth Conference',
             description='Youth Conference',
             image='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            date='2020-12-25',
+            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
         )
         db.session.add(new_major_event)
@@ -65,7 +66,7 @@ with app.app_context():
             name='Youth Conference',
             description='Youth Conference',
             image='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            date='2020-12-25',
+            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
         )
         db.session.add(new_major_event)

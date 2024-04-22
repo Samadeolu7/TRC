@@ -6,6 +6,13 @@ from trc_api.majorevents.model import MajorEvents
 from trc_api.liveservices.model import LiveService
 from trc_api.upcomingevents.model import Events
 
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
+
+jobstores = {
+    'default': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite')
+}
+
 
 def update_services():
     services = MajorService.query.all()
