@@ -7,7 +7,7 @@ class Sermons(db.Model):
     description = db.Column(db.String(200))
     speaker = db.Column(db.String(200))
     date = db.Column(Date)
-    time = db.Column(db.String(200))
+    length = db.Column(db.String(200))
     path = db.Column(db.String(200))
     type = db.Column(db.String(200))
     #sort by date

@@ -36,6 +36,7 @@ class Sermon(Resource):
             description=request.form['description'],
             speaker=request.form['speaker'],
             date=request.form['date'],
+            length= request.form['length'],
             path=save_path + file.filename
         )
         sermon_count = Sermons.query.count()
