@@ -6,3 +6,5 @@ secret.py
 data.json
 
 *.pyc
+
+*.data-00000-of-00001
