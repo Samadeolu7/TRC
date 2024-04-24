@@ -1,14 +1,15 @@
 from flask import jsonify
 from flask_restful import Resource, reqparse
 from trc_api.cluster.model import Cluster, Question, Answer
-from cluster import QuestionMatcher
+# from cluster import QuestionMatcher
 from sqlalchemy.exc import SQLAlchemyError
-from trc_api import q_matcher
+# from trc_api import q_matcher
 from trc_api.database import db
 
 class QuestionsList(Resource):
     def __init__(self):
-        self.matcher = q_matcher
+        pass
+        # self.matcher = q_matcher
 
     def get(self):
         clusters = Cluster.query.all()
@@ -20,7 +21,7 @@ class QuestionsList(Resource):
         data = parser.parse_args()
 
         # Use the QuestionMatcher to find a similar question
-        cluster = self.matcher.find_similar_accuracy(data['question'])
+        cluster = None #self.matcher.find_similar_accuracy(data['question'])
         if isinstance(cluster, Cluster):
             # If a similar question is found, add the question to the cluster and return the answer
             new_question = Question(question=data['question'], cluster_id=cluster.id)

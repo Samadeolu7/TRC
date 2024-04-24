@@ -1,12 +1,6 @@
 from datetime import datetime
-from flask import Flask
-from dotenv import load_dotenv
-from flask_marshmallow import Marshmallow
-from flask_restful import Api
-from flask_sqlalchemy import SQLAlchemy
 from trc_api.liveservices.model import LiveService
 from trc_api.majorevents.model import MajorEvents
-from trc_api.upcomingevents.model import MajorService, Events
 from trc_api.cluster.model import Cluster, Question
 from trc_api.database import db, ma, app
 

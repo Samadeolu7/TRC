@@ -11,6 +11,9 @@ from trc_api.upcomingevents.model import Events
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.jobstores.sqlalchemy import SQLAlchemyJobStore
 
+import os
+os.environ['TF_FORCE_GPU_ALLOW_GROWTH'] = 'true'
+
 jobstores = {
     'default': SQLAlchemyJobStore(url='sqlite:///jobs.sqlite')
 }
@@ -38,6 +41,3 @@ scheduler.add_job(delete_outdated_events, 'interval', days=3)
 scheduler.start()
 
 app = create_app()
-
-if __name__ == "__main__":
-    app.run(debug=True)
