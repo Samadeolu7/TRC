@@ -1,24 +1,14 @@
 from datetime import datetime, timedelta
 from flask_restful import Resource, reqparse
 from flask import request
-from trc_api.database import db
-from trc_api.majorevents.model import MajorEvents
+from trc_api.database import db, photos
+from trc_api.majorevents.model import Guest, MajorEvents
 from trc_api.upcomingevents.model import MajorService, Events, upcoming_events_schema
-
+from werkzeug.utils import secure_filename
 from trc_api.liveservices.model import LiveService, live_services_schema
 
 
-# resource_fields = {
-#     'id': fields.Integer,
-#     'name': fields.String,
-#     'description': fields.String,
-#     'day': fields.String,
-#     'time': fields.String
-# }
-
-
-
-class UpcomingServicesList(Resource):
+class UpcomingEventList(Resource):
     def get(self):
         upcoming_services = Events.query.filter(Events.date >= datetime.now(), Events.date <= datetime.now() + timedelta(days=30)).all()
 
@@ -28,16 +18,36 @@ class UpcomingServicesList(Resource):
         return upcoming_events_schema.dump(upcoming_services)
     
      
-    # @marshal_with(resource_fields)
+    # @marshal_with(resource_fields
+
     def post(self):
         data = request.form
         major = data['major_event']
         if major:
+            guests = data['guests']
+            guest_list = []
+            for guest in guests:
+                new_guest = Guest(
+                    name=guest['name'],
+                    image=guest['image'],
+                    major_event_id=guest['major_event_id']
+                )
+                db.session.add(new_guest)
+                guest_list.append(new_guest)
+
+            # Save the uploaded image
+            image = request.files['image']
+            filename = photos.save(image)
+            filepath = 'uploads/' + filename
+
             new_upcoming_service = MajorEvents(
                 name=data['name'],
                 description=data['description'],
-                day=data['day'],
-                time=data['time']
+                day=data['date'],
+                time=data['time'],
+                url=data['url'],
+                image=filepath,  # Save the file path to the database
+                guests=guest_list
             )
         else:
             new_upcoming_service = Events(
@@ -94,7 +104,7 @@ class UpcomingServicesList(Resource):
         }
     
 
-class UpcomingEventsList(Resource):
+class UpcomingServiceList(Resource):
     def get(self):
         upcoming_services = LiveService.query.filter(LiveService.date >= datetime.now(), LiveService.date <= datetime.now() + timedelta(days=30)).all()
 
@@ -107,7 +117,7 @@ class UpcomingEventsList(Resource):
     # @marshal_with(resource_fields)
     def post(self):
         data = request.form
-        major = data['major_event']
+        major = data['major_service']
         if major:
             new_upcoming_service = MajorService(
                 name=data['name'],

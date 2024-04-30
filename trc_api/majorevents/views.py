@@ -1,6 +1,7 @@
+from flask import request
 from trc_api.database import db
 from flask_restful import Resource, reqparse, fields, marshal_with
-from trc_api.majorevents.model import MajorEvents
+from trc_api.majorevents.model import MajorEvents, MajorEventsSchema
 from trc_api.liveservices.model import live_services_schema
 
 resource_fields = {
@@ -15,33 +16,26 @@ resource_fields = {
 
 
 class MajorEventsList(Resource):
+    
     def get(self):
         major_events = MajorEvents.query.all()
-        return live_services_schema.dump(major_events)
-    
+        schema = MajorEventsSchema(many=True)
+        return schema.dump(major_events)
      
-    @marshal_with(resource_fields)
+    
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('name', type=str, required=True)
-        parser.add_argument('description', type=str, required=True)
-        parser.add_argument('image', type=str, required=True)
-        parser.add_argument('list_of_guests', type=str, required=True)
-        parser.add_argument('date', type=str, required=True)
-        parser.add_argument('url', type=str, required=True)
-        data = parser.parse_args()
+        data = request.form
         
-        new_major_event = MajorEvents(
+        new_upcoming_service = MajorEvents(
             name=data['name'],
             description=data['description'],
-            image=data['image'],
-            list_of_guests=data['list_of_guests'],
-            date=data['date'],
-            url=data['url']
+            day=data['day'],
+            time=data['time']
         )
-        db.session.add(new_major_event)
+        
+        db.session.add(new_upcoming_service)
         db.session.commit()
-        return live_services_schema.dump(new_major_event)
+        return live_services_schema.dump(new_upcoming_service)
     
      
     def delete(self):
