@@ -23,23 +23,24 @@ class UpcomingEventList(Resource):
     def post(self):
         data = request.form
         major = data['major_event']
+        guests = data['guests']
+        guest_list = []
+        for guest in guests:
+            new_guest = Guest(
+                name=guest['name'],
+                image=guest['image'],
+                major_event_id=guest['major_event_id']
+            )
+            db.session.add(new_guest)
+            guest_list.append(new_guest)
+
+        # Save the uploaded image
+        image = request.files['image']
+        filename = photos.save(image)
+        filepath = 'uploads/' + filename
+
         if major:
-            guests = data['guests']
-            guest_list = []
-            for guest in guests:
-                new_guest = Guest(
-                    name=guest['name'],
-                    image=guest['image'],
-                    major_event_id=guest['major_event_id']
-                )
-                db.session.add(new_guest)
-                guest_list.append(new_guest)
-
-            # Save the uploaded image
-            image = request.files['image']
-            filename = photos.save(image)
-            filepath = 'uploads/' + filename
-
+            
             new_upcoming_service = MajorEvents(
                 name=data['name'],
                 description=data['description'],
@@ -53,8 +54,11 @@ class UpcomingEventList(Resource):
             new_upcoming_service = Events(
                 name=data['name'],
                 description=data['description'],
-                day=data['day'],
-                time=data['time']
+                day=data['date'],
+                time=data['time'],
+                url=data['url'],
+                image=filepath,  # Save the file path to the database
+                guests=guest_list
             )
         db.session.add(new_upcoming_service)
         db.session.commit()

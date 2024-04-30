@@ -19,9 +19,10 @@ class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     description = db.Column(db.String(200))
-    day = db.Column(db.String(200))
-    time = db.Column(db.String(200))
-    # date = db.Column(Date)
+    image = db.Column(db.String(200))
+    date = db.Column(Date)
+    url = db.Column(db.String(200))
+    guests = db.relationship('Guest', backref='event')
 
     #delete oudated events
     def delete_outdated_events(self):
@@ -32,7 +33,7 @@ class Events(db.Model):
 
 class UpcomingEventsSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'name', 'description', 'date')
+        fields = ('id', 'name', 'description', 'day', 'time','date')
 
 upcoming_events_schema = UpcomingEventsSchema()
 

@@ -8,14 +8,24 @@ from marshmallow import fields
 class Guest(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
-    image = db.Column(db.String(200),nullable=True)
+    image = db.Column(db.String(200), nullable=True)
     major_event_id = db.Column(db.Integer, db.ForeignKey('major_events.id'))
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
+
+    def delete_if_not_associated(self):
+        if self.major_event_id is None and self.event_id is None:
+            db.session.delete(self)
+            db.session.commit()
+
+
 class MajorEvents(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     description = db.Column(db.String(200))
     image = db.Column(db.String(200))
     date = db.Column(Date)
+    day = db.Column(db.String(200))
+    time = db.Column(db.String(200))
     url = db.Column(db.String(200))
     guests = db.relationship('Guest', backref='major_event')
 
