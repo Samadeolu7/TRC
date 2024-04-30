@@ -32,3 +32,5 @@ class UpcomingEventsSchema(ma.Schema):
     class Meta:
         fields = ('id', 'name', 'description', 'date')
 
+upcoming_events_schema = UpcomingEventsSchema()
+
