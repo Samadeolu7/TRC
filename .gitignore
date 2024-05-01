@@ -1,5 +1,4 @@
 /.env
-/instance
 /__pycache__
 /my_env
 secret.py

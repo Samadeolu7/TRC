@@ -6,6 +6,8 @@ from trc_api.database import db, ma, app
 
 import os
 
+from trc_api.upcomingevents.model import Events
+
 
 class LiveServiceSchema(ma.Schema):
     class Meta:
@@ -50,7 +52,9 @@ with app.app_context():
             name='Youth Conference',
             description='Youth Conference',
             image='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+            # date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+            day='Friday 14th August 2020',
+            time='5:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
         )
         db.session.add(new_major_event)
@@ -60,10 +64,35 @@ with app.app_context():
             name='Youth Conference',
             description='Youth Conference',
             image='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+            # date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+            day='Friday 9th October 2020',
+            time='5:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
         )
         db.session.add(new_major_event)
+        db.session.commit()
+    
+    if Events.query.count() == 0:
+        new_upcoming_service = Events(
+            name='Youth Conference',
+            description='Youth Conference',
+            day='Friday 1st August 2020',
+            time='7:00 PM',
+            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+            image='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
+        )
+        db.session.add(new_upcoming_service)
+        db.session.commit()
+
+        new_upcoming_service = Events(
+            name='Youth Conference',
+            description='Youth Conference',
+            day='Friday 3rd October 2020',
+            time='5:00 PM',
+            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+            image='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
+        )
+        db.session.add(new_upcoming_service)
         db.session.commit()
     
     if Cluster.query.count() == 0:

@@ -3,6 +3,11 @@ from trc_api.database import db, ma
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from datetime import datetime, timedelta
+from flask import url_for
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
+from marshmallow import fields
+from trc_api.majorevents.model import Guest
+
 
 class MajorService(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -20,7 +25,9 @@ class Events(db.Model):
     name = db.Column(db.String(100))
     description = db.Column(db.String(200))
     image = db.Column(db.String(200))
-    date = db.Column(Date)
+    # date = db.Column(Date)
+    day = db.Column(db.String(200))
+    time = db.Column(db.String(200))
     url = db.Column(db.String(200))
     guests = db.relationship('Guest', backref='event')
 
@@ -31,9 +38,15 @@ class Events(db.Model):
             db.session.delete(event)
         db.session.commit()
 
-class UpcomingEventsSchema(ma.Schema):
+class UpcomingEventsSchema(SQLAlchemyAutoSchema):
     class Meta:
-        fields = ('id', 'name', 'description', 'day', 'time','date')
+        model = Events
+        include_fk = True
 
-upcoming_events_schema = UpcomingEventsSchema()
+    image_url = fields.Method('get_image_url')
+
+    def get_image_url(self, obj):
+        return url_for('static', filename=obj.image, _external=True)
+    
+
 

@@ -3,7 +3,7 @@ from flask_restful import Resource, reqparse
 from flask import request
 from trc_api.database import db, photos
 from trc_api.majorevents.model import Guest, MajorEvents
-from trc_api.upcomingevents.model import MajorService, Events, upcoming_events_schema
+from trc_api.upcomingevents.model import MajorService, Events, UpcomingEventsSchema
 from werkzeug.utils import secure_filename
 from trc_api.liveservices.model import LiveService, live_services_schema
 
@@ -14,7 +14,8 @@ class UpcomingEventList(Resource):
 
         upcoming_services += MajorEvents.query.filter(MajorEvents.date >= datetime.now(), MajorEvents.date <= datetime.now() + timedelta(days=90)).all()
         
-
+        upcoming_events_schema = UpcomingEventsSchema(many=True)
+        
         return upcoming_events_schema.dump(upcoming_services)
     
      

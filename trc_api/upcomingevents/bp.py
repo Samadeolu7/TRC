@@ -6,5 +6,5 @@ from trc_api.upcomingevents.views import UpcomingServiceList, UpcomingEventList
 upcoming_events_bp = Blueprint('upcomingevents', __name__)
 api = Api(upcoming_events_bp)
 
-api.add_resource(UpcomingServiceList, '/upcoming_events')
-api.add_resource(UpcomingEventList, '/events')
+api.add_resource(UpcomingServiceList, '/upcoming_services')
+api.add_resource(UpcomingEventList, '/upcoming_events')
