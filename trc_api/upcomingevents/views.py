@@ -15,7 +15,7 @@ class UpcomingEventList(Resource):
         # upcoming_services += MajorEvents.query.filter(MajorEvents.date >= datetime.now(), MajorEvents.date <= datetime.now() + timedelta(days=90)).all()
 
         upcoming_events = Events.query.all()
-        upcoming_major_events = MajorService.query.all()
+        upcoming_major_events = MajorEvents.query.all()
 
         upcoming_events_schema = UpcomingEventsSchema(many=True)
         upcoming_mevents_schema = UpcomingMEventsSchema(many=True)
