@@ -14,7 +14,6 @@ class MajorService(db.Model):
     name = db.Column(db.String(100))
     description = db.Column(db.String(200))
     date = db.Column(Date)
-    day = db.Column(db.String(200))
     time = db.Column(db.String(200))
 
     def increment_date(self):
@@ -25,8 +24,7 @@ class Events(db.Model):
     name = db.Column(db.String(100))
     description = db.Column(db.String(200))
     image = db.Column(db.String(200))
-    # date = db.Column(Date)
-    day = db.Column(db.String(200))
+    date = db.Column(Date)
     time = db.Column(db.String(200))
     url = db.Column(db.String(200))
     guests = db.relationship('Guest', backref='event')

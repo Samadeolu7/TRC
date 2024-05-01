@@ -24,7 +24,6 @@ class MajorEvents(db.Model):
     description = db.Column(db.String(200))
     image = db.Column(db.String(200))
     date = db.Column(Date)
-    day = db.Column(db.String(200))
     time = db.Column(db.String(200))
     url = db.Column(db.String(200))
     guests = db.relationship('Guest', backref='major_event')

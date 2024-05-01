@@ -10,12 +10,15 @@ from trc_api.liveservices.model import LiveService, live_services_schema
 
 class UpcomingEventList(Resource):
     def get(self):
-        upcoming_services = Events.query.filter(Events.date >= datetime.now(), Events.date <= datetime.now() + timedelta(days=30)).all()
+        # upcoming_services = Events.query.filter(Events.date >= datetime.now(), Events.date <= datetime.now() + timedelta(days=30)).all()
 
-        upcoming_services += MajorEvents.query.filter(MajorEvents.date >= datetime.now(), MajorEvents.date <= datetime.now() + timedelta(days=90)).all()
+        # upcoming_services += MajorEvents.query.filter(MajorEvents.date >= datetime.now(), MajorEvents.date <= datetime.now() + timedelta(days=90)).all()
+
+        upcoming_services = Events.query.all()
+        upcoming_services += MajorService.query.all()
         
         upcoming_events_schema = UpcomingEventsSchema(many=True)
-        
+
         return upcoming_events_schema.dump(upcoming_services)
     
      
@@ -45,7 +48,7 @@ class UpcomingEventList(Resource):
             new_upcoming_service = MajorEvents(
                 name=data['name'],
                 description=data['description'],
-                day=data['date'],
+                date=data['date'],
                 time=data['time'],
                 url=data['url'],
                 image=filepath,  # Save the file path to the database
@@ -55,7 +58,7 @@ class UpcomingEventList(Resource):
             new_upcoming_service = Events(
                 name=data['name'],
                 description=data['description'],
-                day=data['date'],
+                date=data['date'],
                 time=data['time'],
                 url=data['url'],
                 image=filepath,  # Save the file path to the database
@@ -100,7 +103,7 @@ class UpcomingEventList(Resource):
         if upcoming_service:
             upcoming_service.name = data['name']
             upcoming_service.description = data['description']
-            upcoming_service.day = data['day']
+            # upcoming_service.day = data['day']
             upcoming_service.time = data['time']
             db.session.commit()
             return live_services_schema.dump(upcoming_service)
@@ -127,14 +130,14 @@ class UpcomingServiceList(Resource):
             new_upcoming_service = MajorService(
                 name=data['name'],
                 description=data['description'],
-                day=data['day'],
+                date=data['day'],
                 time=data['time']
             )
         else:
             new_upcoming_service = LiveService(
                 name=data['name'],
                 description=data['description'],
-                day=data['day'],
+                date=data['day'],
                 time=data['time']
             )
         db.session.add(new_upcoming_service)
@@ -176,7 +179,7 @@ class UpcomingServiceList(Resource):
         if upcoming_service:
             upcoming_service.name = data['name']
             upcoming_service.description = data['description']
-            upcoming_service.day = data['day']
+            # upcoming_service.day = data['day']
             upcoming_service.time = data['time']
             db.session.commit()
             return live_services_schema.dump(upcoming_service)

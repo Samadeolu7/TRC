@@ -29,7 +29,7 @@ class MajorEventsList(Resource):
         new_upcoming_service = MajorEvents(
             name=data['name'],
             description=data['description'],
-            day=data['day'],
+            date=data['date'],
             time=data['time']
         )
         

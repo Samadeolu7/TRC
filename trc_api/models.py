@@ -52,8 +52,8 @@ with app.app_context():
             name='Youth Conference',
             description='Youth Conference',
             image='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            # date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
-            day='Friday 14th August 2020',
+            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+
             time='5:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
         )
@@ -64,8 +64,8 @@ with app.app_context():
             name='Youth Conference',
             description='Youth Conference',
             image='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            # date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
-            day='Friday 9th October 2020',
+            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+
             time='5:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
         )
@@ -76,7 +76,7 @@ with app.app_context():
         new_upcoming_service = Events(
             name='Youth Conference',
             description='Youth Conference',
-            day='Friday 1st August 2020',
+            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
             time='7:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
             image='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
@@ -87,7 +87,7 @@ with app.app_context():
         new_upcoming_service = Events(
             name='Youth Conference',
             description='Youth Conference',
-            day='Friday 3rd October 2020',
+            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
             time='5:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
             image='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
