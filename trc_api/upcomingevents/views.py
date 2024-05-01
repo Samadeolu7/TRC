@@ -3,7 +3,7 @@ from flask_restful import Resource, reqparse
 from flask import request
 from trc_api.database import db, photos
 from trc_api.majorevents.model import Guest, MajorEvents
-from trc_api.upcomingevents.model import MajorService, Events, UpcomingEventsSchema
+from trc_api.upcomingevents.model import MajorService, Events, UpcomingEventsSchema, UpcomingMEventsSchema
 from werkzeug.utils import secure_filename
 from trc_api.liveservices.model import LiveService, live_services_schema
 
@@ -14,15 +14,17 @@ class UpcomingEventList(Resource):
 
         # upcoming_services += MajorEvents.query.filter(MajorEvents.date >= datetime.now(), MajorEvents.date <= datetime.now() + timedelta(days=90)).all()
 
-        upcoming_services = Events.query.all()
-        upcoming_services += MajorService.query.all()
-        
-        upcoming_events_schema = UpcomingEventsSchema(many=True)
+        upcoming_events = Events.query.all()
+        upcoming_major_events = MajorService.query.all()
 
-        return upcoming_events_schema.dump(upcoming_services)
+        upcoming_events_schema = UpcomingEventsSchema(many=True)
+        upcoming_mevents_schema = UpcomingMEventsSchema(many=True)
+
+        events_data = upcoming_events_schema.dump(upcoming_events)
+        major_events_data = upcoming_mevents_schema.dump(upcoming_major_events)
+
+        return {'events': events_data, 'major_events': major_events_data}
     
-     
-    # @marshal_with(resource_fields
 
     def post(self):
         data = request.form
