@@ -41,6 +41,7 @@ def create_app():
     from trc_api.cluster.bp import cluster_bp
     from trc_api.sermons.bp import sermons_bp
     from trc_api.ping.app import ping_bp
+    from trc_api.files.bp import files_bp
 
     if "liveservice" not in app.blueprints:
         app.register_blueprint(liveservices_bp)
@@ -55,5 +56,7 @@ def create_app():
     if "major_events" not in app.blueprints:
         app.register_blueprint(major_events_bp)
     # Register other blueprints here
+    if "files" not in app.blueprints:
+        app.register_blueprint(files_bp)
 
     return app

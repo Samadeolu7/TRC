@@ -28,6 +28,7 @@ class Events(db.Model):
     time = db.Column(db.String(200))
     url = db.Column(db.String(200))
     guests = db.relationship('Guest', backref='event')
+    major_event = db.Column(db.Boolean, default=False)
 
     #delete oudated events
     def delete_outdated_events(self):

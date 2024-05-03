@@ -47,30 +47,6 @@ with app.app_context():
         db.session.add(new_live_service)
         db.session.commit()
 
-    if MajorEvents.query.count() == 0:
-        new_major_event = MajorEvents(
-            name='Youth Conference',
-            description='Youth Conference',
-            image='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
-
-            time='5:00 PM',
-            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
-        )
-        db.session.add(new_major_event)
-        db.session.commit()
-
-        new_major_event = MajorEvents(
-            name='Youth Conference',
-            description='Youth Conference',
-            image='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
-
-            time='5:00 PM',
-            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
-        )
-        db.session.add(new_major_event)
-        db.session.commit()
     
     if Events.query.count() == 0:
         new_upcoming_service = Events(
@@ -93,6 +69,31 @@ with app.app_context():
             image='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
         )
         db.session.add(new_upcoming_service)
+        db.session.commit()
+
+        
+        new_major_event = Events(
+            name='Youth Conference',
+            description='Youth Conference',
+            image='upload/events/1.jpeg',
+            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+
+            time='5:00 PM',
+            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
+        )
+        db.session.add(new_major_event)
+        db.session.commit()
+
+        new_major_event = Events(
+            name='Youth Conference',
+            description='Youth Conference',
+            image='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+
+            time='5:00 PM',
+            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
+        )
+        db.session.add(new_major_event)
         db.session.commit()
     
     if Cluster.query.count() == 0:

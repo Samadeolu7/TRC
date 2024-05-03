@@ -78,4 +78,3 @@ class SermonDownload(Resource):
             return send_file(sermon.path, as_attachment=True)
         return {'message': 'Sermon not found'}, 404
     
-
