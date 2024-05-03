@@ -1,6 +1,5 @@
 from datetime import datetime
 from trc_api.liveservices.model import LiveService
-from trc_api.majorevents.model import MajorEvents
 from trc_api.cluster.model import Cluster, Question
 from trc_api.database import db, ma, app
 

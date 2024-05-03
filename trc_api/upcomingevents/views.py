@@ -3,7 +3,7 @@ from flask_restful import Resource, reqparse
 from flask import request
 import werkzeug
 from trc_api.database import db, photos
-from trc_api.majorevents.model import Guest, MajorEvents
+from trc_api.majorevents.model import Guest
 from trc_api.upcomingevents.model import MajorService, Events, UpcomingEventsSchema, UpcomingMEventsSchema
 from werkzeug.utils import secure_filename
 from trc_api.liveservices.model import LiveService, live_services_schema
@@ -31,19 +31,12 @@ class UpcomingEventList(Resource):
         major = data['major_event']
         guests = data['guests']
         guest_list = []
-        for guest in guests:
-            new_guest = Guest(
-                name=guest['name'],
-                image=guest['image'],
-                major_event_id=guest['major_event_id']
-            )
-            db.session.add(new_guest)
-            guest_list.append(new_guest)
+        
 
         # Save the uploaded image
         image = request.files['image']
         filename = photos.save(image)
-        filepath = 'uploads/' + filename
+        filepath = 'events/' + filename
 
         if major:
             
@@ -68,6 +61,14 @@ class UpcomingEventList(Resource):
                 guests=guest_list,
                 major_event=False
             )
+        for guest in guests:
+            new_guest = Guest(
+                name=guest['name'],
+                image=guest['image'],
+                major_event_id=new_upcoming_service.id
+            )
+            db.session.add(new_guest)
+            guest_list.append(new_guest)
         db.session.add(new_upcoming_service)
         db.session.commit()
         return live_services_schema.dump(new_upcoming_service)
