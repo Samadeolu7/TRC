@@ -15,3 +15,4 @@ class Guest(db.Model):
         if self.major_event_id is None and self.event_id is None:
             db.session.delete(self)
             db.session.commit()
+

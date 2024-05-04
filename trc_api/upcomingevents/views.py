@@ -62,9 +62,12 @@ class UpcomingEventList(Resource):
                 major_event=False
             )
         for guest in guests:
+            image = guest['image']
+            filename = photos.save(image)
+            filepath = 'guests/' + filename
             new_guest = Guest(
                 name=guest['name'],
-                image=guest['image'],
+                image=filename,
                 major_event_id=new_upcoming_service.id
             )
             db.session.add(new_guest)
