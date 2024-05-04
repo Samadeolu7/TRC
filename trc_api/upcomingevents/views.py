@@ -27,7 +27,7 @@ class UpcomingEventList(Resource):
     
 
     def post(self):
-        data = request.form
+        data = request.get_json()
         major = data['major_event']
         guests = data['guests']
         guest_list = []
@@ -74,7 +74,9 @@ class UpcomingEventList(Resource):
             guest_list.append(new_guest)
         db.session.add(new_upcoming_service)
         db.session.commit()
-        return live_services_schema.dump(new_upcoming_service)
+        upcoming_events_schema = UpcomingEventsSchema(many=True)
+
+        return upcoming_events_schema.dump(new_upcoming_service)
     
      
     def delete(self):
