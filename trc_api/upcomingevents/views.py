@@ -35,7 +35,7 @@ class UpcomingEventList(Resource):
         date_str = data['date']
         date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
         image = event_photos.save(files['image'])
-        filepath = 'events/' + image
+        filepath = 'upload/events/' + image
         new_upcoming_service = Events(
             name=data['name'],
             description=data['description'],
@@ -53,7 +53,7 @@ class UpcomingEventList(Resource):
             guest_name = data[f'guests[{i}][name]']
             guest_image = files[f'guests[{i}][image]']
             filename = guest_photos.save(guest_image)
-            filepath = 'guests/' + filename
+            filepath = 'upload/guests/' + filename
             new_guest = Guest(
                 name=guest_name,
                 image=filepath,
