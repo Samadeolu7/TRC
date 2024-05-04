@@ -25,59 +25,46 @@ class UpcomingEventList(Resource):
 
         return events_data
     
-
     def post(self):
-        data = request.get_json()
+        data = request.form
+        files = request.files
         major = data['major_event']
-        guests = data['guests']
-        guest_list = []
-        
 
         # Save the uploaded image
         image = request.files['image']
         filename = photos.save(image)
         filepath = 'events/' + filename
 
-        if major:
-            
-            new_upcoming_service = Events(
-                name=data['name'],
-                description=data['description'],
-                date=data['date'],
-                time=data['time'],
-                url=data['url'],
-                image=filepath,  # Save the file path to the database
-                guests=guest_list,
-                major_event=True
-            )
-        else:
-            new_upcoming_service = Events(
-                name=data['name'],
-                description=data['description'],
-                date=data['date'],
-                time=data['time'],
-                url=data['url'],
-                image=filepath,  # Save the file path to the database
-                guests=guest_list,
-                major_event=False
-            )
-        for guest in guests:
-            image = guest['image']
-            filename = photos.save(image)
+        new_upcoming_service = Events(
+            name=data['name'],
+            description=data['description'],
+            date=data['date'],
+            time=data['time'],
+            url=data['url'],
+            image=filepath,  # Save the file path to the database
+            major_event=major
+        )
+        db.session.add(new_upcoming_service)
+        db.session.commit()
+
+        guests = []
+        for i in range(2):  # Replace 2 with the actual number of guests
+            guest_name = data[f'guests[{i}][name]']
+            guest_image = files[f'guests[{i}][image]']
+            filename = photos.save(guest_image)
             filepath = 'guests/' + filename
             new_guest = Guest(
-                name=guest['name'],
-                image=filename,
+                name=guest_name,
+                image=filepath,
                 major_event_id=new_upcoming_service.id
             )
             db.session.add(new_guest)
-            guest_list.append(new_guest)
-        db.session.add(new_upcoming_service)
-        db.session.commit()
-        upcoming_events_schema = UpcomingEventsSchema(many=True)
+            guests.append(new_guest)
 
+        db.session.commit()
+
+        upcoming_events_schema = UpcomingEventsSchema(many=True)
         return upcoming_events_schema.dump(new_upcoming_service)
-    
      
     def delete(self):
         parser = reqparse.RequestParser()
