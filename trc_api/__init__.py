@@ -20,6 +20,8 @@ def create_app():
     api = dbs.api 
     db = dbs.db 
 
+    dbs.configure_upload_sets(app)
+
     CORS(app) 
 
     jwt = JWTManager(app)

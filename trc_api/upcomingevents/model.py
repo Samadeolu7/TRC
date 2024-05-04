@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 from flask import url_for
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields
-from trc_api.majorevents.model import Guest
+from trc_api.majorevents.model import Guest, GuestSchema
 
 
 class MajorService(db.Model):
@@ -43,10 +43,15 @@ class UpcomingEventsSchema(SQLAlchemyAutoSchema):
         include_fk = True
 
     image_url = fields.Method('get_image_url')
+    guests = fields.Nested(GuestSchema, many=True)
 
     def get_image_url(self, obj):
-        return url_for('static', filename=obj.image, _external=True)
-    
+        if obj.image is not None:
+            return url_for('static', filename=obj.image, _external=True)
+        else:
+            return None
+
+
 
 class UpcomingMEventsSchema(SQLAlchemyAutoSchema):
     class Meta:

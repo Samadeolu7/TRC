@@ -16,3 +16,16 @@ class Guest(db.Model):
             db.session.delete(self)
             db.session.commit()
 
+class GuestSchema(SQLAlchemyAutoSchema):
+    class Meta:
+        model = Guest
+        include_fk = True
+
+    image_url = fields.Method('get_image_url')
+
+    def get_image_url(self, obj):
+        if obj.image is not None:
+            return url_for('static', filename=obj.image, _external=True)
+        else:
+            return None
+
