@@ -29,24 +29,18 @@ class UpcomingEventList(Resource):
         data = request.form
         files = request.files
         major = data['major_event']
-
-        # Save the uploaded image
-        image = request.files['image']
-        filename = photos.save(image)
-        filepath = 'events/' + filename
-
+    
         new_upcoming_service = Events(
             name=data['name'],
             description=data['description'],
             date=data['date'],
             time=data['time'],
             url=data['url'],
-            image=filepath,  # Save the file path to the database
             major_event=major
         )
         db.session.add(new_upcoming_service)
         db.session.commit()
-
+    
         guests = []
         for i in range(2):  # Replace 2 with the actual number of guests
             guest_name = data[f'guests[{i}][name]']
@@ -60,12 +54,11 @@ class UpcomingEventList(Resource):
             )
             db.session.add(new_guest)
             guests.append(new_guest)
-
+    
         db.session.commit()
-
+    
         upcoming_events_schema = UpcomingEventsSchema(many=True)
-        return upcoming_events_schema.dump(new_upcoming_service)
-     
+        return upcoming_events_schema.dump(new_upcoming_service) 
     def delete(self):
         parser = reqparse.RequestParser()
         parser.add_argument('id', type=int, required=True)
