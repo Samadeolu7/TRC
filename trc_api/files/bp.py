@@ -5,5 +5,5 @@ from .views import GuestImage, EventImage
 files_bp = Blueprint('files', __name__)
 api = Api(files_bp)
 
-api.add_resource(GuestImage, '/uploads/guests/<int:id>')
-api.add_resource(EventImage, '/uploads/events/<int:id>')
+api.add_resource(GuestImage, '/upload/guests/<int:id>')
+api.add_resource(EventImage, '/upload/events/<int:id>')

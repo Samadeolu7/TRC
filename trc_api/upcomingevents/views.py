@@ -114,7 +114,7 @@ class UpcomingEventList(Resource):
             if data.get('image'):
                 image = data['image']
                 filename = guest_photos.save(image)
-                filepath = 'uploads/' + filename
+                filepath = 'upload/' + filename
                 upcoming_event.image = filepath
             if data.get('major_event') is not None:
                 upcoming_event.major_event = data['major_event']
