@@ -55,7 +55,7 @@ class UpcomingEventsSchema(SQLAlchemyAutoSchema):
         model = Events
         include_fk = True
 
-    image_url = fields.Method('get_image_url')
+    image = fields.Method('get_image_url')
 
     def get_image_url(self, obj):
         base_url = os.getenv('BASE_URL')
@@ -68,7 +68,7 @@ class UpcomingMEventsSchema(SQLAlchemyAutoSchema):
         model = Events
         include_fk = True
 
-    image_url = fields.Method('get_image_url')
+    image = fields.Method('get_image_url')
 
     def get_image_url(self, obj):
         base_url = os.getenv('BASE_URL')
@@ -84,7 +84,7 @@ class GuestSchema(SQLAlchemyAutoSchema):
         include_fk = True
 
 
-    image_url = fields.Method('get_image_url')
+    image = fields.Method('get_image_url')
 
     def get_image_url(self, obj):
         base_url = os.getenv('BASE_URL')
