@@ -2,9 +2,8 @@
 from trc_api import create_app
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timedelta
-from trc_api.upcomingevents.model import MajorService
 from trc_api.database import db
-from trc_api.liveservices.model import LiveService
+from trc_api.liveservices.model import LiveService, MajorService
 from trc_api.upcomingevents.model import Events
 
 from apscheduler.schedulers.background import BackgroundScheduler

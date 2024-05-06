@@ -21,16 +21,7 @@ class Guest(db.Model):
         if self.major_event_id is None and self.event_id is None:
             db.session.delete(self)
             db.session.commit()
-            
-class MajorService(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    description = db.Column(db.String(200))
-    date = db.Column(Date)
-    time = db.Column(db.String(200))
-
-    def increment_date(self):
-        self.date = self.date + timedelta(days=7)
+        
 
 class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -73,8 +64,6 @@ class UpcomingMEventsSchema(SQLAlchemyAutoSchema):
     def get_image_url(self, obj):
         base_url = os.getenv('BASE_URL')
         return f'{base_url}events/{obj.id}'
-
-
 
 
 class GuestSchema(SQLAlchemyAutoSchema):

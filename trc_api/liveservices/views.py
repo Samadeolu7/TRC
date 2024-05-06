@@ -1,37 +1,40 @@
+from datetime import datetime, timedelta
+from flask import request
 from flask_restful import Resource, marshal_with, reqparse, fields
 
-from trc_api.liveservices.model import LiveService, live_service_schema, live_services_schema, db
-
-
-resource_fields = {
-    'id': fields.Integer,
-    'name': fields.String,
-    'description': fields.String,
-    'url': fields.String,
-    'is_active': fields.Boolean
-}
+from trc_api.liveservices.model import LiveService, MajorService, live_service_schema, live_services_schema, db
 
 
 class LiveServiceList(Resource):
     def get(self):
-        live_services = LiveService.query.all()
-        return live_services_schema.dump(live_services)
+        services = LiveService.query.all()
+        services += MajorService.query.all()
+
+        return live_services_schema.dump(services)
     
      
-    @marshal_with(resource_fields)
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('description', type=str, required=True)
         parser.add_argument('url', type=str, required=True)
         parser.add_argument('is_active', type=bool, required=True)
+        parser.add_argument('time', type=str, required=True)
+        parser.add_argument('date', type=str, required=True)
+        parser.add_argument('speaker', type=str, required=True)
         data = parser.parse_args()
+
+        date_str = data['date']
+        date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
         
         new_live_service = LiveService(
             name=data['name'],
             description=data['description'],
             url=data['url'],
-            is_active=data['is_active']
+            is_active=data['is_active'],
+            time=data['time'],
+            date=date_obj,
+            speaker=data['speaker']
         )
         db.session.add(new_live_service)
         db.session.commit()

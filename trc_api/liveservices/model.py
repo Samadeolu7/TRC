@@ -1,3 +1,5 @@
+from datetime import timedelta
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from sqlalchemy import Date
 import trc_api.database as models
 
@@ -9,8 +11,10 @@ class LiveService(db.Model):
     name = db.Column(db.String(100))
     description = db.Column(db.String(200))
     date = db.Column(Date)
+    time = db.Column(db.String(200))
     url = db.Column(db.String(200))
-    is_active = db.Column(db.Boolean)
+    is_active = db.Column(db.Boolean, default=False)
+    speaker = db.Column(db.String(100))
 
     def delete_outdated_events(self):
         outdated_events = LiveService.query.filter(LiveService.date < LiveService.now()).all()
@@ -19,9 +23,25 @@ class LiveService(db.Model):
         db.session.commit()
 
 
-class LiveServiceSchema(ma.Schema):
+class MajorService(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    description = db.Column(db.String(200))
+    date = db.Column(Date)
+    time = db.Column(db.String(200))
+    url = db.Column(db.String(200))
+    is_active = db.Column(db.Boolean, default=False)
+    speaker = db.Column(db.String(100))
+    
+
+    def increment_date(self):
+        self.date = self.date + timedelta(days=7)
+
+class LiveServiceSchema(SQLAlchemyAutoSchema):
     class Meta:
-        fields = ('id', 'name', 'description', 'date', 'url', 'is_active')
+        model = LiveService
+        load_instance = True
+    
 
 live_service_schema = LiveServiceSchema()
 live_services_schema = LiveServiceSchema(many=True)

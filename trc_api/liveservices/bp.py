@@ -6,4 +6,4 @@ from .views import LiveServiceList
 liveservices_bp = Blueprint('liveservice', __name__)
 api = Api(liveservices_bp)
 
-api.add_resource(LiveServiceList, '/liveservices')
+api.add_resource(LiveServiceList, '/services')
