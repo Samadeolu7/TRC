@@ -14,7 +14,7 @@ class GuestImage(Resource):
     def get(self, id):
         guest = Guest.query.get(id)
 
-        image_path = guest.image
+        image_path = guest.image_url
         if image_path:
             send_file(image_path)
         return {'message': 'The guest does not have an image'}, 404
@@ -24,7 +24,7 @@ class EventImage(Resource):
     
     def get(self, id):
         event = Events.query.get(id)
-        image_path = os.path.join(current_app.root_path, event.image)
+        image_path = os.path.join(current_app.root_path, event.image_url)
         if image_path:
             if os.path.exists(image_path) and os.access(image_path, os.R_OK):
                 return send_file(image_path)
@@ -37,7 +37,7 @@ class SermonImage(Resource):
         def get(self, id):
             sermon = Sermons.query.get(id)
             print(sermon)
-            image_path = os.path.join(current_app.root_path, sermon.image)
+            image_path = os.path.join(current_app.root_path, sermon.image_url)
             if image_path:
                 if os.path.exists(image_path) and os.access(image_path, os.R_OK):
                     return send_file(image_path)
