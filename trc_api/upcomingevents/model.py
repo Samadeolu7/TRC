@@ -51,12 +51,15 @@ class Events(db.Model):
         db.session.commit()
 
 class UpcomingEventsSchema(SQLAlchemyAutoSchema):
-    base_url = os.getenv('BASE_URL')
     class Meta:
         model = Events
         include_fk = True
 
-    image = base_url + f'events/{Events.id}'
+    image_url = fields.Method('get_image_url')
+
+    def get_image_url(self, obj):
+        base_url = os.getenv('BASE_URL')
+        return f'{base_url}events/{obj.id}'
 
 
 class UpcomingMEventsSchema(SQLAlchemyAutoSchema):
@@ -65,7 +68,11 @@ class UpcomingMEventsSchema(SQLAlchemyAutoSchema):
         model = Events
         include_fk = True
 
-    image = base_url + f'events/{Events.id}'
+    image_url = fields.Method('get_image_url')
+
+    def get_image_url(self, obj):
+        base_url = os.getenv('BASE_URL')
+        return f'{base_url}events/{obj.id}'
 
 
 
@@ -77,4 +84,8 @@ class GuestSchema(SQLAlchemyAutoSchema):
         include_fk = True
 
 
-    image = base_url + f'events/{Events.id}'
+    image_url = fields.Method('get_image_url')
+
+    def get_image_url(self, obj):
+        base_url = os.getenv('BASE_URL')
+        return f'{base_url}guests/{obj.id}'

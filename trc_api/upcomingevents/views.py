@@ -37,7 +37,7 @@ class UpcomingEventList(Resource):
             date=date_obj,
             time=data['time'],
             url=data['url'],
-            image_url = image,
+            image_url = filepath,
             major_event=int(major)
         )
         db.session.add(new_upcoming_service)

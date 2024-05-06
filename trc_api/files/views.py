@@ -24,7 +24,6 @@ class EventImage(Resource):
     
     def get(self, id):
         event = Events.query.get(id)
-        print(event)
         image_path = os.path.join(current_app.root_path, event.image)
         if image_path:
             if os.path.exists(image_path) and os.access(image_path, os.R_OK):
