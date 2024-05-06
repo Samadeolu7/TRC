@@ -17,8 +17,6 @@ class UpcomingEventList(Resource):
         upcoming_events = Events.query.all()
         upcoming_events_schema = UpcomingEventsSchema(many=True)
         events_data = upcoming_events_schema.dump(upcoming_events)
-        
-        print(events_data)
 
         return events_data
     
@@ -42,9 +40,9 @@ class UpcomingEventList(Resource):
         )
         db.session.add(new_upcoming_service)
         db.session.commit()
-    
+
         guests = []
-        for i in range(2):  # Replace 2 with the actual number of guests
+        for i in range(int(data['guests_no'])):  # Replace 2 with the actual number of guests
             guest_name = data[f'guests[{i}][name]']
             guest_image = files[f'guests[{i}][image]']
             filename = guest_photos.save(guest_image)
@@ -60,7 +58,10 @@ class UpcomingEventList(Resource):
         db.session.commit()
     
         upcoming_events_schema = UpcomingEventsSchema()
-        return upcoming_events_schema.dump(new_upcoming_service) 
+
+        res= upcoming_events_schema.dump(new_upcoming_service)
+        return res
+
     
     def delete(self):
         parser = reqparse.RequestParser()
