@@ -1,14 +1,13 @@
 from flask import request, send_file
 from flask_restful import Resource
 from werkzeug.datastructures import FileStorage
-from trc_api.majorevents.model import Guest
 from trc_api.sermons.model import Sermons
 from trc_api.database import db
 from dotenv import load_dotenv
 import os
 from flask import current_app
 
-from trc_api.upcomingevents.model import Events
+from trc_api.upcomingevents.model import Events, Guest
 
 class GuestImage(Resource):
     

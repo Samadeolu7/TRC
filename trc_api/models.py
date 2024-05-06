@@ -54,7 +54,7 @@ with app.app_context():
             date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
             time='7:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            image='upload/events/1.jpeg'
+            image_url='upload/events/1.jpeg'
         )
         db.session.add(new_upcoming_service)
         db.session.commit()
@@ -65,7 +65,7 @@ with app.app_context():
             date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
             time='5:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            image='upload/events/2.jpeg'
+            image_url='upload/events/2.jpeg'
         )
         db.session.add(new_upcoming_service)
         db.session.commit()
@@ -74,7 +74,7 @@ with app.app_context():
         new_major_event = Events(
             name='Youth Conference',
             description='Youth Conference',
-            image='upload/events/3.jpeg',
+            image_url='upload/events/3.jpeg',
             date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
 
             time='5:00 PM',
@@ -86,7 +86,7 @@ with app.app_context():
         new_major_event = Events(
             name='Youth Conference',
             description='Youth Conference',
-            image='upload/events/4.jpeg',
+            image_url='upload/events/4.jpeg',
             date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
 
             time='5:00 PM',

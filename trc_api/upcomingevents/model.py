@@ -6,9 +6,22 @@ from datetime import datetime, timedelta
 from flask import url_for
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from marshmallow import fields
-from trc_api.majorevents.model import Guest, GuestSchema
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
+class Guest(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    image_url = db.Column(db.String(200), nullable=True)
+    event_id = db.Column(db.Integer, db.ForeignKey('events.id'))
+
+    def delete_if_not_associated(self):
+        if self.major_event_id is None and self.event_id is None:
+            db.session.delete(self)
+            db.session.commit()
+            
 class MajorService(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -23,7 +36,7 @@ class Events(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     description = db.Column(db.String(200))
-    image = db.Column(db.String(200))
+    image_url = db.Column(db.String(200))
     date = db.Column(Date)
     time = db.Column(db.String(200))
     url = db.Column(db.String(200))
@@ -38,27 +51,30 @@ class Events(db.Model):
         db.session.commit()
 
 class UpcomingEventsSchema(SQLAlchemyAutoSchema):
+    base_url = os.getenv('BASE_URL')
     class Meta:
         model = Events
         include_fk = True
 
-    image_url = fields.Method('get_image_url')
-    guests = fields.Nested(GuestSchema, many=True)
-
-    def get_image_url(self, obj):
-        if obj.image is not None:
-            return url_for('static', filename=obj.image, _external=True)
-        else:
-            return None
-
+    image = base_url + f'events/{Events.id}'
 
 
 class UpcomingMEventsSchema(SQLAlchemyAutoSchema):
+    base_url = os.getenv('BASE_URL')
     class Meta:
         model = Events
         include_fk = True
 
-    image_url = fields.Method('get_image_url')
+    image = base_url + f'events/{Events.id}'
 
-    def get_image_url(self, obj):
-        return url_for('static', filename=obj.image, _external=True)
+
+
+
+class GuestSchema(SQLAlchemyAutoSchema):
+    base_url = os.getenv('BASE_URL')
+    class Meta:
+        model = Guest
+        include_fk = True
+
+
+    image = base_url + f'events/{Events.id}'

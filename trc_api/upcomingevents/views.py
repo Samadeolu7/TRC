@@ -3,8 +3,7 @@ from flask_restful import Resource, reqparse
 from flask import request
 import werkzeug
 from trc_api.database import db, guest_photos, event_photos
-from trc_api.majorevents.model import Guest
-from trc_api.upcomingevents.model import MajorService, Events, UpcomingEventsSchema, UpcomingMEventsSchema
+from trc_api.upcomingevents.model import Guest, MajorService, Events, UpcomingEventsSchema, UpcomingMEventsSchema
 from werkzeug.utils import secure_filename
 from trc_api.liveservices.model import LiveService, live_services_schema
 from dotenv import load_dotenv
@@ -18,10 +17,6 @@ class UpcomingEventList(Resource):
         upcoming_events = Events.query.all()
         upcoming_events_schema = UpcomingEventsSchema(many=True)
         events_data = upcoming_events_schema.dump(upcoming_events)
-
-        base_url = os.getenv('BASE_URL')
-        for event in events_data:
-            event['image'] = base_url + f'events/{event["id"]}'
         
         print(events_data)
 
@@ -42,7 +37,7 @@ class UpcomingEventList(Resource):
             date=date_obj,
             time=data['time'],
             url=data['url'],
-            image = image,
+            image_url = image,
             major_event=int(major)
         )
         db.session.add(new_upcoming_service)
@@ -56,7 +51,7 @@ class UpcomingEventList(Resource):
             filepath = 'upload/guests/' + filename
             new_guest = Guest(
                 name=guest_name,
-                image=filepath,
+                image_url=filepath,
                 event_id=new_upcoming_service.id
             )
             db.session.add(new_guest)
@@ -127,11 +122,11 @@ class UpcomingEventList(Resource):
                 filepath = 'guests/' + filename
                 guest = Guest.query.filter_by(event_id=upcoming_event.id, name=guest_name).first()
                 if guest:
-                    guest.image = filepath
+                    guest.image_url = filepath
                 else:
                     new_guest = Guest(
                         name=guest_name,
-                        image=filepath,
+                        image_url=filepath,
                         event_id=upcoming_event.id
                     )
                     db.session.add(new_guest)
