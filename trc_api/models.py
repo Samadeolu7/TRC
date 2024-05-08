@@ -188,7 +188,7 @@ with app.app_context():
             speaker_desription='Pastor John Doe',
             date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
             audio_file='upload/sermons/1.mp3',
-            image='upload/sermons/1.jpeg',
+            image='upload/sermons/6.jpeg',
             type='audio'
         )
         db.session.add(new_sermon)
@@ -201,7 +201,7 @@ with app.app_context():
             speaker_desription='Pastor John Doe',
             date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
             audio_file='upload/sermons/2.mp3',
-            image='upload/sermons/2.jpeg',
+            image='upload/sermons/7.jpeg',
             type='audio'
         )
         db.session.add(new_sermon)

@@ -7,5 +7,5 @@ api = Api(files_bp)
 
 api.add_resource(GuestImage, '/upload/guests/<int:id>')
 api.add_resource(EventImage, '/upload/events/<int:id>')
-api.add_resource(SermonImage, '/sermons/<int:id>/image')
-api.add_resource(SermonAudio, '/sermons/<int:id>/audio')
+api.add_resource(SermonImage, '/upload/sermons/<int:id>/image')
+api.add_resource(SermonAudio, '/upload/sermons/<int:id>/audio')

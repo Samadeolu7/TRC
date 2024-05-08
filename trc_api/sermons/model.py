@@ -25,8 +25,8 @@ class SermonsSchema(ma.SQLAlchemyAutoSchema):
 
     def get_image_url(self, obj):
         base_url = os.getenv('BASE_URL')
-        return f'{base_url}sermons/{obj.id}'
+        return f'{base_url}sermons/{obj.id}/image'
     
     def get_audio_url(self, obj):
         base_url = os.getenv('BASE_URL')
-        return f'{base_url}semons/{obj.id}'
+        return f'{base_url}semons/{obj.id}/audio'
