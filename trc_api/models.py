@@ -206,4 +206,3 @@ with app.app_context():
         )
         db.session.add(new_sermon)
         db.session.commit()
-

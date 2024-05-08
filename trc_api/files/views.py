@@ -36,13 +36,12 @@ class SermonImage(Resource):
         
         def get(self, id):
             sermon = Sermons.query.get(id)
-            print(sermon)
             image_path = os.path.join(current_app.root_path, sermon.image)
             if image_path:
                 if os.path.exists(image_path) and os.access(image_path, os.R_OK):
                     return send_file(image_path)
                 else:
-                    return {'message': 'The image file cannot be accessed'}, 500
+                    return {'message': f'The image file in {image_path} cannot be accessed'}, 500
             return {'message': 'The sermon does not have an image'}, 404
         
 class SermonAudio(Resource):
