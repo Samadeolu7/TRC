@@ -1,7 +1,7 @@
 from flask import request, send_file
 from flask_restful import Resource
 from werkzeug.datastructures import FileStorage
-from trc_api.sermons.model import Sermons
+from trc_api.sermons.model import Sermons, SermonsSchema
 from trc_api.database import db
 from dotenv import load_dotenv
 import os
@@ -19,25 +19,26 @@ class Sermon(Resource):
         if 'file' not in request.files:
             return {'message': 'No file part in the request'}, 400
 
-        file = request.files['file']
+        audio_file = request.files['audio_file']
+        image = request.files['image']
 
-        # If the user does not select a file, the browser might
-        # submit an empty file part without a filename, so check this
-        if file.filename == '':
+
+        if audio_file.filename == '':
             return {'message': 'No selected file'}, 400
-
-        # You can now use the file object
-        # For example, to save it to a file in the server:
+        if image.filename == '':
+            return {'message': 'No selected file'}, 400
         save_path = os.path.join(os.getcwd(), 'sermons')
-        file.save(save_path + file.filename)
+        audio_file.save(save_path + audio_file.filename)
+        image.save(save_path + image.filename)
         
         sermon = Sermons(
             name=request.form['name'],
             description=request.form['description'],
             speaker=request.form['speaker'],
             date=request.form['date'],
-            length= request.form['length'],
-            path=save_path + file.filename
+            speaker_description = request.form['speaker_description'],
+            audio_file=save_path + audio_file.filename,
+            image=save_path + image.filename
         )
         sermon_count = Sermons.query.count()
         sermon_limit = int(os.getenv('SERMON_LIMIT'))
@@ -57,7 +58,9 @@ class SermonDetail(Resource):
         def get(self, sermon_id):
             sermon = Sermons.query.get(sermon_id)
             if sermon:
-                return {'sermon': {'id': sermon.id, 'name': sermon.name, 'description': sermon.description, 'speaker': sermon.speaker, 'date': sermon.date, 'path': sermon.path}}, 200
+                sermon_schema = SermonsSchema()
+                return sermon_schema.dump(sermon), 200
+            
             return {'message': 'Sermon not found'}, 404
     
         def delete(self, sermon_id):
