@@ -110,17 +110,17 @@ class UpcomingEventList(Resource):
             if data.get('image'):
                 image = data['image']
                 filename = guest_photos.save(image)
-                filepath = 'upload/' + filename
+                filepath = 'upload/guests/' + filename
                 upcoming_event.image = filepath
             if data.get('major_event') is not None:
                 upcoming_event.major_event = data['major_event']
     
             # Update guests
-            for i in range(2):  # Replace 2 with the actual number of guests
+            for i in int(data['guests_no']):
                 guest_name = data[f'guests[{i}][name]']
                 guest_image = files[f'guests[{i}][image]']
                 filename = guest_photos.save(guest_image)
-                filepath = 'guests/' + filename
+                filepath = 'upload/guests/' + filename
                 guest = Guest.query.filter_by(event_id=upcoming_event.id, name=guest_name).first()
                 if guest:
                     guest.image_url = filepath
