@@ -62,12 +62,14 @@ class UpcomingEventList(Resource):
         res= upcoming_events_schema.dump(new_upcoming_service)
         return res
 
+class UpcomingEventEdit(Resource):
+    def get(self, id):
+        upcoming_event = Events.query.get(id)
+        upcoming_events_schema = UpcomingEventsSchema()
+        return upcoming_events_schema.dump(upcoming_event)
     
-    def delete(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, required=True)
-        data = parser.parse_args()
-        upcoming_service = Events.query.get(data['id'])
+    def delete(self, id):
+        upcoming_service = Events.query.get(id)
         
         if upcoming_service:
             db.session.delete(upcoming_service)
@@ -79,11 +81,8 @@ class UpcomingEventList(Resource):
             'message': 'The upcoming service does not exist'
         }
     
-     
-    # @marshal_with(resource_fields)
-    def put(self):
+    def put(self, id):
         parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, required=True, location='form')
         parser.add_argument('name', type=str, required=False, location='form')
         parser.add_argument('description', type=str, required=False, location='form')
         parser.add_argument('date', type=str, required=False, location='form')
@@ -94,9 +93,10 @@ class UpcomingEventList(Resource):
         data = parser.parse_args()
         files = request.files
     
-        upcoming_event = Events.query.get(data['id'])
+        upcoming_event = Events.query.get(id)
     
         if upcoming_event:
+            # ... rest of the code ...
             if data.get('name'):
                 upcoming_event.name = data['name']
             if data.get('description'):
@@ -137,4 +137,3 @@ class UpcomingEventList(Resource):
             return upcoming_events_schema.dump(upcoming_event)
         else:
             return {'message': 'The upcoming service does not exist'}, 404    
-

@@ -5,6 +5,7 @@ from trc_api.database import db, ma, app
 
 import os
 
+from trc_api.sermons.model import Sermons
 from trc_api.upcomingevents.model import Events
 
 
@@ -179,5 +180,30 @@ with app.app_context():
         db.session.add(new_question)
         db.session.commit()
 
-    
+    if Sermons.query.count() == 0:
+        new_sermon = Sermons(
+            name='The Power of Prayer',
+            description='The Power of Prayer',
+            speaker='Pastor John Doe',
+            speaker_desription='Pastor John Doe',
+            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+            audio_file='upload/sermons/1.mp3',
+            image='upload/sermons/1.jpeg',
+            type='audio'
+        )
+        db.session.add(new_sermon)
+        db.session.commit()
+
+        new_sermon = Sermons(
+            name='The Power of Prayer',
+            description='The Power of Prayer',
+            speaker='Pastor John Doe',
+            speaker_desription='Pastor John Doe',
+            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+            audio_file='upload/sermons/2.mp3',
+            image='upload/sermons/2.jpeg',
+            type='audio'
+        )
+        db.session.add(new_sermon)
+        db.session.commit()
 
