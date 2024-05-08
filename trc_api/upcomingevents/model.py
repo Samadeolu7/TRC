@@ -47,6 +47,7 @@ class UpcomingEventsSchema(SQLAlchemyAutoSchema):
         include_fk = True
 
     image = fields.Method('get_image_url')
+    guests = fields.Nested('GuestSchema', many=True)
 
     def get_image_url(self, obj):
         base_url = os.getenv('BASE_URL')
