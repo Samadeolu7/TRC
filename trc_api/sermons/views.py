@@ -12,7 +12,8 @@ class Sermon(Resource):
 
     def get(self):
         sermons = Sermons.query.all()
-        return {'sermons': [(sermon.id,sermon.name,sermon.type) for sermon in sermons]}, 200
+        sermons_schema = SermonsSchema(many=True)
+        return sermons_schema.dump(sermons), 200
 
     def post(self):
         # Check if the post request has the file part
@@ -55,16 +56,16 @@ class Sermon(Resource):
 
 class SermonDetail(Resource):
     
-        def get(self, sermon_id):
-            sermon = Sermons.query.get(sermon_id)
+        def get(self, id):
+            sermon = Sermons.query.get(id)
             if sermon:
                 sermon_schema = SermonsSchema()
                 return sermon_schema.dump(sermon), 200
             
             return {'message': 'Sermon not found'}, 404
     
-        def delete(self, sermon_id):
-            sermon = Sermons.query.get(sermon_id)
+        def delete(self,id):
+            sermon = Sermons.query.get(id)
             if sermon:
                 os.remove(sermon.path)
                 db.session.delete(sermon)
