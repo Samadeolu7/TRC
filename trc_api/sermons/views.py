@@ -29,8 +29,8 @@ class Sermon(Resource):
         if image.filename == '':
             return {'message': 'No selected file'}, 400
         save_path = os.path.join(os.getcwd(), 'sermons')
-        audio_file.save(save_path + audio_file.filename)
-        image.save(save_path + image.filename)
+        audio_file.save(save_path +'/audio/'+ audio_file.filename)
+        image.save(save_path +'/image/'+ image.filename)
         
         sermon = Sermons(
             name=request.form['name'],

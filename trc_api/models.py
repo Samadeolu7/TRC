@@ -187,8 +187,8 @@ with app.app_context():
             speaker='Pastor John Doe',
             speaker_desription='Pastor John Doe',
             date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
-            audio_file='upload/sermons/1.mp3',
-            image='upload/sermons/6.jpeg',
+            audio_file='upload/sermons/audio/1.mp3',
+            image='upload/sermons/image/6.jpeg',
             type='audio'
         )
         db.session.add(new_sermon)
