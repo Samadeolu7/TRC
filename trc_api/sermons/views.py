@@ -18,9 +18,8 @@ class Sermon(Resource):
         return sermons_schema.dump(sermons), 200
 
     def post(self):
-        # Check if the post request has the file part
-        if 'file' not in request.files:
-            return {'message': 'No file part in the request'}, 400
+        if 'audio_file' not in request.files or 'image' not in request.files:
+            return {'message': 'No file part'}, 400
 
         audio_file = request.files['audio_file']
         image = request.files['image']
