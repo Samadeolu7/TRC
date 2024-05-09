@@ -29,4 +29,4 @@ class SermonsSchema(ma.SQLAlchemyAutoSchema):
     
     def get_audio_url(self, obj):
         base_url = os.getenv('BASE_URL')
-        return f'{base_url}semons/{obj.id}/audio'
+        return f'{base_url}sermons/{obj.id}/audio'
