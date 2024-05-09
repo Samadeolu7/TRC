@@ -4,7 +4,9 @@ from werkzeug.datastructures import FileStorage
 from trc_api.sermons.model import Sermons, SermonsSchema
 from trc_api.database import db
 from dotenv import load_dotenv
+from mutagen.mp3 import MP3
 import os
+
 
 load_dotenv()
 
@@ -30,6 +32,8 @@ class Sermon(Resource):
             return {'message': 'No selected file'}, 400
         save_path = os.path.join(os.getcwd(), 'sermons')
         audio_file.save(save_path +'/audio/'+ audio_file.filename)
+        audio = MP3(save_path +'/audio/'+ audio_file.filename)
+        audio_len = audio.info.length
         image.save(save_path +'/image/'+ image.filename)
         
         sermon = Sermons(
@@ -39,7 +43,9 @@ class Sermon(Resource):
             date=request.form['date'],
             speaker_description = request.form['speaker_description'],
             audio_file=save_path + audio_file.filename,
-            image=save_path + image.filename
+            image=save_path + image.filename,
+            audio_len=int(audio_len),
+            type=request.form['type'],
         )
         sermon_count = Sermons.query.count()
         sermon_limit = int(os.getenv('SERMON_LIMIT'))

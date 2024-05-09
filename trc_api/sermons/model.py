@@ -11,6 +11,7 @@ class Sermons(db.Model):
     speaker_desription = db.Column(db.String(200))
     date = db.Column(Date)
     audio_file = db.Column(db.String(200))
+    audio_len = db.Column(db.Integer)
     image = db.Column(db.String(200))
     type = db.Column(db.String(200))
 

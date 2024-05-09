@@ -189,7 +189,8 @@ with app.app_context():
             date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
             audio_file='upload/sermons/audio/1.mp3',
             image='upload/sermons/image/6.jpeg',
-            type='audio'
+            type='audio',
+            audio_len= 190
         )
         db.session.add(new_sermon)
         db.session.commit()
@@ -202,7 +203,8 @@ with app.app_context():
             date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
             audio_file='upload/sermons//audio/2.mp3',
             image='upload/sermons/image/7.jpeg',
-            type='audio'
+            type='audio',
+            audio_len= 187
         )
         db.session.add(new_sermon)
         db.session.commit()
