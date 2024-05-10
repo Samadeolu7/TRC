@@ -6,5 +6,5 @@ from .views import QuestionsList, AnswersList
 cluster_bp = Blueprint('cluster', __name__)
 api = Api(cluster_bp)
 
-api.add_resource(QuestionsList, '/cluster/questions')
-api.add_resource(AnswersList, '/cluster/answers')
+api.add_resource(QuestionsList, '/questions')
+api.add_resource(AnswersList, '/answers')
