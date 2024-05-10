@@ -29,7 +29,7 @@ class Sermon(Resource):
             return {'message': 'No selected file'}, 400
         if image.filename == '':
             return {'message': 'No selected file'}, 400
-        save_path = os.getcwd() + 'trc_api/upload/sermons'
+        save_path = os.getcwd() + '/trc_api/upload/sermons'
         audio_file.save(save_path +'/audio/'+ audio_file.filename)
         audio = MP3(save_path +'/audio/'+ audio_file.filename)
         audio_len = audio.info.length
