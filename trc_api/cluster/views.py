@@ -1,6 +1,6 @@
 from flask import jsonify
 from flask_restful import Resource, reqparse
-from trc_api.cluster.model import Cluster, Question, Answer
+from trc_api.cluster.model import Cluster, Question, Answer,ClusterSchema,QuestionSchema,AnswerSchema   
 # from cluster import QuestionMatcher
 from sqlalchemy.exc import SQLAlchemyError
 # from trc_api import q_matcher
@@ -13,7 +13,8 @@ class QuestionsList(Resource):
 
     def get(self):
         clusters = Cluster.query.all()
-        return {'clusters': [cluster.to_dict() for cluster in clusters]}, 200
+        cluster_schema = ClusterSchema(many=True)
+        return cluster_schema.dump(clusters), 200
 
     def post(self):
         parser = reqparse.RequestParser()
@@ -57,3 +58,30 @@ class AnswersList(Resource):
         except SQLAlchemyError:
             db.session.rollback()
             return {"message": "Error occurred"}, 500
+        
+class Cluster(Resource):
+    def get(self, id):
+        cluster = Cluster.query.get(id)
+        if cluster:
+            return cluster.to_dict(), 200
+        return {"message": "Cluster not found"}, 404
+
+    def put(self, id):
+        parser = reqparse.RequestParser()
+        parser.add_argument('gen_question', type=str, required=True)
+        data = parser.parse_args()
+
+        cluster = Cluster.query.get(id)
+        if cluster:
+            cluster.gen_question = data['gen_question']
+            db.session.commit()
+            return cluster.to_dict(), 200
+        return {"message": "Cluster not found"}, 404
+
+    def delete(self, id):
+        cluster = Cluster.query.get(id)
+        if cluster:
+            db.session.delete(cluster)
+            db.session.commit()
+            return {"message": "Cluster deleted"}, 200
+        return {"message": "Cluster not found"}, 404

@@ -25,9 +25,13 @@ class QuestionSchema(ma.Schema):
     class Meta:
         fields = ('id', 'question', 'cluster_id')
 
+class AnswerSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'answer', 'cluster_id')
+
 class ClusterSchema(ma.Schema):
     questions = ma.Nested(QuestionSchema, many=True)
+    answer = ma.Nested(AnswerSchema)
     
     class Meta:
         fields = ('id', 'gen_question', 'questions', 'answer_id')
-
