@@ -2,7 +2,7 @@ from datetime import datetime
 from trc_api.liveservices.model import LiveService
 from trc_api.cluster.model import Cluster, Question
 from trc_api.database import db, ma, app
-
+from mutagen.mp3 import MP3
 import os
 
 from trc_api.sermons.model import Sermons
@@ -27,7 +27,7 @@ with app.app_context():
             is_active=True
         )
         db.session.add(new_live_service)
-        db.session.commit()
+         
 
         new_live_service = LiveService(
             name='Wednesday Service',
@@ -36,7 +36,7 @@ with app.app_context():
             is_active=True
         )
         db.session.add(new_live_service)
-        db.session.commit()
+         
 
         new_live_service = LiveService(
             name='Friday Service',
@@ -45,7 +45,7 @@ with app.app_context():
             is_active=True
         )
         db.session.add(new_live_service)
-        db.session.commit()
+         
 
     
     if Events.query.count() == 0:
@@ -58,7 +58,7 @@ with app.app_context():
             image_url='upload/events/1.jpeg'
         )
         db.session.add(new_upcoming_service)
-        db.session.commit()
+         
 
         new_upcoming_service = Events(
             name='Youth Conference',
@@ -69,7 +69,7 @@ with app.app_context():
             image_url='upload/events/2.jpeg'
         )
         db.session.add(new_upcoming_service)
-        db.session.commit()
+         
 
         
         new_major_event = Events(
@@ -82,7 +82,7 @@ with app.app_context():
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
         )
         db.session.add(new_major_event)
-        db.session.commit()
+         
 
         new_major_event = Events(
             name='Youth Conference',
@@ -94,7 +94,7 @@ with app.app_context():
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
         )
         db.session.add(new_major_event)
-        db.session.commit()
+         
     
     if Cluster.query.count() == 0:
         new_cluster = Cluster(
@@ -102,83 +102,72 @@ with app.app_context():
             answered=False
         )
         db.session.add(new_cluster)
-        db.session.commit()
 
         new_question = Question(
             question='How can I overcome fear?',
             cluster=new_cluster
         )
         db.session.add(new_question)
-        db.session.commit()
 
         new_question = Question(
             question='How can I overcome fear of failure?',
             cluster=new_cluster
         )
         db.session.add(new_question)
-        db.session.commit()
+
         new_cluster = Cluster(
             gen_question='How can I overcome peer pressure?',
             answered=False
         )
         db.session.add(new_cluster)
-        db.session.commit()
 
         new_question = Question(
             question='How can I overcome peer pressure?',
             cluster=new_cluster
         )
         db.session.add(new_question)
-        db.session.commit()
 
         new_question = Question(
             question='How can i make decisions not based on peer pressure?',
             cluster=new_cluster
         )
         db.session.add(new_question)
-        db.session.commit()
 
         new_cluster = Cluster(
             gen_question='What is the purpose of my life?',
             answered=False
         )
         db.session.add(new_cluster)
-        db.session.commit()
 
         new_question = Question(
             question='What is the purpose of my life?',
             cluster=new_cluster
         )
         db.session.add(new_question)
-        db.session.commit()
 
         new_question = Question(
             question='How can I find my purpose in life?',
             cluster=new_cluster
         )
         db.session.add(new_question)
-        db.session.commit()
 
         new_cluster = Cluster(
             gen_question='How can I strengthen my relationship with God?',
             answered=False
         )
         db.session.add(new_cluster)
-        db.session.commit()
 
         new_question = Question(
             question='How can I strengthen my relationship with God?',
             cluster=new_cluster
         )
         db.session.add(new_question)
-        db.session.commit()
 
         new_question = Question(
             question='How can I know God more?',
             cluster=new_cluster
         )
         db.session.add(new_question)
-        db.session.commit()
 
     if Sermons.query.count() == 0:
         new_sermon = Sermons(
@@ -193,7 +182,6 @@ with app.app_context():
             audio_len= 190
         )
         db.session.add(new_sermon)
-        db.session.commit()
 
         new_sermon = Sermons(
             name='The Power of Prayer',
@@ -207,4 +195,17 @@ with app.app_context():
             audio_len= 187
         )
         db.session.add(new_sermon)
-        db.session.commit()
+
+        new_sermon = Sermons(
+            name='Let me hear you say Amen',
+            description='Let me hear you say Amen',
+            speaker='Pastor John Doe',
+            speaker_desription='Pastor John Doe',
+            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+            audio_file='upload/sermons/audio/3.mp3',
+            image='upload/sermons/image/8.jpeg',
+            type='audio',
+            audio_len= MP3(os.getcwd() + '/trc_api/upload/sermons/audio/3.mp3').info.length
+        )
+        db.session.add(new_sermon)
+    db.session.commit()
