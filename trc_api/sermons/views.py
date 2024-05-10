@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask import request, send_file
 from flask_restful import Resource
 from werkzeug.datastructures import FileStorage
@@ -34,27 +35,33 @@ class Sermon(Resource):
         audio = MP3(audio_file)
         audio_len = audio.info.length
         image.save(save_path +'/image/'+ image.filename)
-        
-        sermon = Sermons(
-            name=request.form['name'],
-            description=request.form['description'],
-            speaker=request.form['speaker'],
-            date=request.form['date'],
-            speaker_description = request.form['speaker_description'],
-            audio_file=save_path + audio_file.filename,
-            image=save_path + image.filename,
-            audio_len=int(audio_len),
-            type=request.form['type'],
-        )
-        sermon_count = Sermons.query.count()
-        sermon_limit = int(os.getenv('SERMON_LIMIT'))
-        # Check if the limit has been reached
-        if sermon_count >= sermon_limit:
-            # If the limit is reached, delete the oldest sermon
-            oldest_sermon = Sermons.query.order_by(Sermons.date).first()
-            db.session.delete(oldest_sermon)
-        db.session.add(sermon)
-        db.session.commit()
+
+        date_str = request.form['date']
+        date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+        name = request.form['name']
+        description = request.form['description']
+        speaker = request.form['speaker']
+        speaker_description = request.form['speaker_description']
+        type = request.form['type']
+        try:
+            sermon = Sermons(
+                name=name,
+                description=description,
+                speaker=speaker,
+                date=date_obj,  # assuming date is in 'YYYY-MM-DD' format
+                speaker_desription=speaker_description,  # corrected field name
+                audio_file=os.path.join(save_path, 'audio', audio_file.filename),  # corrected file path
+                image=os.path.join(save_path, 'image', image.filename),  # corrected file path
+                audio_len=int(audio_len),
+                type=type,
+            )
+            print(6)
+            
+            db.session.add(sermon)
+            db.session.commit()
+        except Exception as e:
+            print(e)
+            return {'message': 'An error occurred while adding the sermon'}, 500
 
         return {'message': 'Sermon has been added'}, 201
     
