@@ -113,9 +113,12 @@ class UpcomingEventEdit(Resource):
                 upcoming_event.url = data['url']
             if data.get('image'):
                 image = data['image']
-                filename = guest_photos.save(image)
-                filepath = 'upload/guests/' + filename
-                upcoming_event.image = filepath
+                if '.' in image.filename and image.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+                    filename = guest_photos.save(image)
+                    filepath = 'upload/guests/' + filename
+                    upcoming_event.image = filepath
+                else:
+                    return {'message': 'File type not allowed'}, 400
             if data.get('major_event') is not None:
                 upcoming_event.major_event = data['major_event']
     

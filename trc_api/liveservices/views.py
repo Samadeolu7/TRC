@@ -73,7 +73,7 @@ class LiveServiceEdit(Resource):
             live_service.url = data['url']
             live_service.is_active = data['is_active']
             db.session.commit()
-            return live_services_schema.dump(live_service)
+            return live_service_schema.dump(live_service)
         return {
             'message': 'The live service does not exist'
         }
