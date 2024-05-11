@@ -79,7 +79,8 @@ class SermonDetail(Resource):
         def delete(self,id):
             sermon = Sermons.query.get(id)
             if sermon:
-                os.remove(sermon.path)
+                os.remove(sermon.audio_file)
+                os.remove(sermon.image)
                 db.session.delete(sermon)
                 db.session.commit()
                 return {'message': 'Sermon has been deleted'}, 200

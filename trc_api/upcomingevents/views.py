@@ -72,6 +72,10 @@ class UpcomingEventEdit(Resource):
         upcoming_service = Events.query.get(id)
         
         if upcoming_service:
+            os.remove(upcoming_service.image_url)
+            for guest in upcoming_service.guests:
+                os.remove(guest.image_url)
+                db.session.delete(guest)
             db.session.delete(upcoming_service)
             db.session.commit()
             return {

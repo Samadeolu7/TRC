@@ -40,13 +40,13 @@ class LiveServiceList(Resource):
         db.session.commit()
         return live_service_schema.dump(new_live_service)
     
-     
-    def delete(self):
+
+class LiveServiceEdit(Resource):    
+    def delete(self,id):
         parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, required=True)
         data = parser.parse_args()
         
-        live_service = LiveService.query.get(data['id'])
+        live_service = LiveService.query.get(id)
         if live_service:
             db.session.delete(live_service)
             db.session.commit()
