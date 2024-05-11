@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from flask_restful import Resource, reqparse
-from flask import request
+from flask import current_app, request
 import werkzeug
 from trc_api.database import db, guest_photos, event_photos
 from trc_api.upcomingevents.model import Guest, Events, UpcomingEventsSchema, UpcomingMEventsSchema
@@ -72,9 +72,9 @@ class UpcomingEventEdit(Resource):
         upcoming_service = Events.query.get(id)
         
         if upcoming_service:
-            os.remove(upcoming_service.image_url)
+            os.remove(os.path.join(current_app.root_path,upcoming_service.image_url))
             for guest in upcoming_service.guests:
-                os.remove(guest.image_url)
+                os.remove(os.path.join(current_app.root_path,guest.image_url))
                 db.session.delete(guest)
             db.session.delete(upcoming_service)
             db.session.commit()
