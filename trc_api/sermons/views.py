@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask import request, send_file
+from flask import current_app, request, send_file
 from flask_restful import Resource
 from werkzeug.datastructures import FileStorage
 from trc_api.sermons.model import Sermons, SermonsSchema
@@ -79,8 +79,8 @@ class SermonDetail(Resource):
         def delete(self,id):
             sermon = Sermons.query.get(id)
             if sermon:
-                os.remove(sermon.audio_file)
-                os.remove(sermon.image)
+                os.remove(os.path.join(current_app.root_path, sermon.audio_file))
+                os.remove(os.path.join(current_app.root_path, sermon.image))
                 db.session.delete(sermon)
                 db.session.commit()
                 return {'message': 'Sermon has been deleted'}, 200
