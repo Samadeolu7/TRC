@@ -58,16 +58,15 @@ class LiveServiceEdit(Resource):
         }
     
      
-    def put(self):
+    def put(self,id):
         parser = reqparse.RequestParser()
-        parser.add_argument('id', type=int, required=True)
         parser.add_argument('name', type=str, required=True)
         parser.add_argument('description', type=str, required=True)
         parser.add_argument('url', type=str, required=True)
         parser.add_argument('is_active', type=bool, required=True)
         data = parser.parse_args()
         
-        live_service = LiveService.query.get(data['id'])
+        live_service = LiveService.query.get(id)
         if live_service:
             live_service.name = data['name']
             live_service.description = data['description']

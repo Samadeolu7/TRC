@@ -55,7 +55,6 @@ class Sermon(Resource):
                 audio_len=int(audio_len),
                 type=type,
             )
-            print(6)
             
             db.session.add(sermon)
             db.session.commit()
@@ -84,6 +83,37 @@ class SermonDetail(Resource):
                 db.session.delete(sermon)
                 db.session.commit()
                 return {'message': 'Sermon has been deleted'}, 200
+            return {'message': 'Sermon not found'}, 404
+        
+        def put(self, id):
+            sermon = Sermons.query.get(id)
+            if sermon:
+                data = request.form
+                files = request.files
+                if 'audio_file' in files:
+                    audio_file = files['audio_file']
+                    audio_file.save(sermon.audio_file)
+                    audio = MP3(sermon.audio_file)
+                    sermon.audio_len = audio.info.length
+                if 'image' in files:
+                    image = files['image']
+                    image.save(sermon.image)
+                if 'name' in data:
+                    sermon.name = data['name']
+                if 'description' in data:
+                    sermon.description = data['description']
+                if 'speaker' in data:
+                    sermon.speaker = data['speaker']
+                if 'speaker_description' in data:
+                    sermon.speaker_description = data['speaker_description']
+                if 'date' in data:
+                    date_str = data['date']
+                    date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+                    sermon.date = date_obj
+                if 'type' in data:
+                    sermon.type = data['type']
+                db.session.commit()
+                return {'message': 'Sermon has been updated'}, 200
             return {'message': 'Sermon not found'}, 404
         
 
