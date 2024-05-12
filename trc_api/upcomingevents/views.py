@@ -151,7 +151,7 @@ class UpcomingEventEdit(Resource):
                         db.session.delete(guest)
 
             db.session.commit()
-            upcoming_events_schema = UpcomingEventsSchema(many=True)
+            upcoming_events_schema = UpcomingEventsSchema()
             return upcoming_events_schema.dump(upcoming_event)
         else:
             return {'message': 'The upcoming service does not exist'}, 404
