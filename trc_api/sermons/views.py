@@ -90,14 +90,23 @@ class SermonDetail(Resource):
             if sermon:
                 data = request.form
                 files = request.files
+                save_path = os.getcwd() + '/trc_api/upload/sermons'
                 if 'audio_file' in files:
+                    # Delete the old audio file
+                    os.remove(sermon.audio_file)
+                    # Save the new audio file
                     audio_file = files['audio_file']
-                    audio_file.save(sermon.audio_file)
-                    audio = MP3(sermon.audio_file)
+                    audio_file.save(save_path +'/audio/'+ audio_file.filename)
+                    audio = MP3(save_path +'/audio/'+ audio_file.filename)
                     sermon.audio_len = audio.info.length
+                    sermon.audio_file = save_path +'/audio/'+ audio_file.filename
                 if 'image' in files:
+                    # Delete the old image file
+                    os.remove(sermon.image)
+                    # Save the new image file
                     image = files['image']
-                    image.save(sermon.image)
+                    image.save(save_path +'/image/'+ image.filename)
+                    sermon.image = save_path +'/image/'+ image.filename
                 if 'name' in data:
                     sermon.name = data['name']
                 if 'description' in data:
@@ -115,7 +124,6 @@ class SermonDetail(Resource):
                 db.session.commit()
                 return {'message': 'Sermon has been updated'}, 200
             return {'message': 'Sermon not found'}, 404
-        
 
 class SermonDownload(Resource):
     
