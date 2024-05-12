@@ -96,51 +96,62 @@ class UpcomingEventEdit(Resource):
         parser.add_argument('major_event', type=bool, required=False, location='form')
         data = parser.parse_args()
         files = request.files
-    
+
         upcoming_event = Events.query.get(id)
-    
+        ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
         if upcoming_event:
-            # ... rest of the code ...
+            # ... existing if data.get lines ...
             if data.get('name'):
                 upcoming_event.name = data['name']
             if data.get('description'):
                 upcoming_event.description = data['description']
-            if data.get('date'):
-                upcoming_event.date = data['date']
             if data.get('time'):
                 upcoming_event.time = data['time']
             if data.get('url'):
                 upcoming_event.url = data['url']
+            if data.get('date'):
+                date_str = data['date']
+                date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+                upcoming_event.date = date_obj
+
             if data.get('image'):
                 image = data['image']
                 if '.' in image.filename and image.filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS:
+                    os.remove(os.path.join(current_app.root_path, upcoming_event.image_url))  # delete old image
                     filename = guest_photos.save(image)
                     filepath = 'upload/guests/' + filename
                     upcoming_event.image = filepath
                 else:
                     return {'message': 'File type not allowed'}, 400
-            if data.get('major_event') is not None:
-                upcoming_event.major_event = data['major_event']
-    
+
             # Update guests
-            for i in int(data['guests_no']):
-                guest_name = data[f'guests[{i}][name]']
-                guest_image = files[f'guests[{i}][image]']
-                filename = guest_photos.save(guest_image)
-                filepath = 'upload/guests/' + filename
-                guest = Guest.query.filter_by(event_id=upcoming_event.id, name=guest_name).first()
-                if guest:
-                    guest.image_url = filepath
-                else:
-                    new_guest = Guest(
-                        name=guest_name,
-                        image_url=filepath,
-                        event_id=upcoming_event.id
-                    )
-                    db.session.add(new_guest)
-    
+            # Update guests
+            if 'guests' in data:
+                existing_guests = {guest.name: guest for guest in upcoming_event.guests}
+                for i in range(len(data['guests'])):
+                    guest_name = data[f'guests[{i}][name]']
+                    guest_image = files[f'guests[{i}][image]']
+                    filename = guest_photos.save(guest_image)
+                    filepath = 'upload/guests/' + filename
+                    if guest_name in existing_guests:
+                        os.remove(os.path.join(current_app.root_path, existing_guests[guest_name].image_url))  # delete old image
+                        existing_guests[guest_name].image_url = filepath
+                    else:
+                        new_guest = Guest(
+                            name=guest_name,
+                            image_url=filepath,
+                            event_id=upcoming_event.id
+                        )
+                        db.session.add(new_guest)
+
+                # Delete guests that are not in the updated list
+                for guest_name, guest in existing_guests.items():
+                    if guest_name not in [guest['name'] for guest in data['guests']]:
+                        os.remove(os.path.join(current_app.root_path, guest.image_url))  # delete image
+                        db.session.delete(guest)
+
             db.session.commit()
             upcoming_events_schema = UpcomingEventsSchema(many=True)
             return upcoming_events_schema.dump(upcoming_event)
         else:
-            return {'message': 'The upcoming service does not exist'}, 404    
+            return {'message': 'The upcoming service does not exist'}, 404
