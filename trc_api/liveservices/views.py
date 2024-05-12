@@ -58,20 +58,37 @@ class LiveServiceEdit(Resource):
         }
     
      
-    def put(self,id):
+    def put(self, id):
         parser = reqparse.RequestParser()
-        parser.add_argument('name', type=str, required=True)
-        parser.add_argument('description', type=str, required=True)
-        parser.add_argument('url', type=str, required=True)
-        parser.add_argument('is_active', type=bool, required=True)
+        parser.add_argument('name', type=str)
+        parser.add_argument('description', type=str)
+        parser.add_argument('url', type=str)
+        parser.add_argument('is_active', type=bool)
+        parser.add_argument('time', type=str)
+        parser.add_argument('date', type=str)
+        parser.add_argument('speaker', type=str)
+
         data = parser.parse_args()
         
         live_service = LiveService.query.get(id)
         if live_service:
-            live_service.name = data['name']
-            live_service.description = data['description']
-            live_service.url = data['url']
-            live_service.is_active = data['is_active']
+            if data.get('name'):
+                live_service.name = data['name']
+            if data.get('description'):
+                live_service.description = data['description']
+            if data.get('url'):
+                live_service.url = data['url']
+            if data.get('is_active') is not None:
+                live_service.is_active = data['is_active']
+            if data.get('time'):
+                live_service.time = data['time']
+            if data.get('date'):
+                date_str = data['date']
+                date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
+                live_service.date = date_obj
+            if data.get('speaker'):
+                live_service.speaker = data['speaker']
+            
             db.session.commit()
             return live_service_schema.dump(live_service)
         return {
