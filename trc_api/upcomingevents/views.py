@@ -109,6 +109,8 @@ class UpcomingEventEdit(Resource):
                 upcoming_event.time = data['time']
             if data.get('url'):
                 upcoming_event.url = data['url']
+            if data.get('major_event'):
+                upcoming_event.major_event = data['major_event']
             if data.get('date'):
                 date_str = data['date']
                 date_obj = datetime.strptime(date_str, '%Y-%m-%dT%H:%M:%S.%fZ')
