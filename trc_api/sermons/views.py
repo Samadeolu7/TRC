@@ -93,7 +93,7 @@ class SermonDetail(Resource):
                 save_path = os.getcwd() + '/trc_api/upload/sermons'
                 if 'audio_file' in files:
                     # Delete the old audio file
-                    os.remove(sermon.audio_file)
+                    os.remove(os.path.join(current_app.root_path, sermon.audio_file))
                     # Save the new audio file
                     audio_file = files['audio_file']
                     audio_file.save(save_path +'/audio/'+ audio_file.filename)
@@ -102,7 +102,7 @@ class SermonDetail(Resource):
                     sermon.audio_file = save_path +'/audio/'+ audio_file.filename
                 if 'image' in files:
                     # Delete the old image file
-                    os.remove(sermon.image)
+                    os.remove(os.path.join(current_app.root_path, sermon.image))
                     # Save the new image file
                     image = files['image']
                     image.save(save_path +'/image/'+ image.filename)
