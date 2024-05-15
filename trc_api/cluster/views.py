@@ -59,7 +59,7 @@ class AnswersList(Resource):
             db.session.rollback()
             return {"message": "Error occurred"}, 500
         
-class Cluster(Resource):
+class ClusterWeb(Resource):
     def get(self, id):
         cluster = Cluster.query.get(id)
         if cluster:
