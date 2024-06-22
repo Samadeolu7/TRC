@@ -101,4 +101,9 @@ class CurrentLiveService(Resource):
         current_date = datetime.now()
         #filter for the on that is active
         services = LiveService.query.filter(LiveService.is_active == True).first
-        return live_service_schema.dump(services)
+        major_services = MajorService.query.filter(MajorService.is_active == True).first
+        #return the earliest one
+        if services.date < major_services.date:
+            return live_service_schema.dump(services)
+        else:
+            return live_service_schema.dump(major_services)
