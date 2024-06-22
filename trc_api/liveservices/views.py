@@ -5,6 +5,7 @@ from flask_restful import Resource, marshal_with, reqparse, fields
 from trc_api.liveservices.model import LiveService, MajorService, live_service_schema, live_services_schema, db
 
 
+#TITLE DESCRIPTION URL IS_ACTIVE TIME DATE SPEAKER
 class LiveServiceList(Resource):
     def get(self):
         services = LiveService.query.all()
@@ -94,3 +95,10 @@ class LiveServiceEdit(Resource):
         return {
             'message': 'The live service does not exist'
         }
+    
+class CurrentLiveService(Resource):
+    def get(self):
+        current_date = datetime.now()
+        #filter for the on that is active
+        services = LiveService.query.filter(LiveService.is_active == True).first
+        return live_service_schema.dump(services)
