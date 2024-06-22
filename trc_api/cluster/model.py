@@ -15,11 +15,26 @@ class Cluster(db.Model):
     answer_id = db.Column(db.Integer, db.ForeignKey('answer.id'),nullable=True)
     answered = db.Column(db.Boolean, default=False)
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'gen_question': self.gen_question,
+            'questions': [question.to_dict() for question in self.questions],
+            'answer_id': self.answer_id
+        }
+
 
 class Answer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     answer = db.Column(db.String(200))
     cluster = db.relationship('Cluster', backref='answer')
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'answer': self.answer,
+            'cluster': [cluster.to_dict() for cluster in self.cluster]
+        }
 
 class QuestionSchema(ma.Schema):
     class Meta:
