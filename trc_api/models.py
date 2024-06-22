@@ -1,5 +1,5 @@
 from datetime import datetime
-from trc_api.liveservices.model import LiveService
+from trc_api.liveservices.model import LiveService, MajorService
 from trc_api.cluster.model import Cluster, Question
 from trc_api.database import db, ma, app
 from mutagen.mp3 import MP3
@@ -24,7 +24,9 @@ with app.app_context():
             name='Sunday Service',
             description='Sunday Service',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            is_active=True
+            date = datetime.strptime('2024-06-23', '%Y-%m-%d').date(),
+            time = '7:00 pm',
+            is_active=False
         )
         db.session.add(new_live_service)
          
@@ -33,6 +35,8 @@ with app.app_context():
             name='Wednesday Service',
             description='Wednesday Service',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+            date = datetime.strptime('2024-06-23', '%Y-%m-%d').date(),
+            time = '7:00 pm',
             is_active=True
         )
         db.session.add(new_live_service)
@@ -42,12 +46,47 @@ with app.app_context():
             name='Friday Service',
             description='Friday Service',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            is_active=True
+            is_active=False,
+            date = datetime.strptime('2024-06-23', '%Y-%m-%d').date(),
+            time = '7:00 pm'
         )
         db.session.add(new_live_service)
+
+    if MajorService.query.count() == 0:
+
+        majorservice = MajorService(
+            name='Sunday Service',
+            description='Sunday Service',
+            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+            is_active=False,
+            date = datetime.strptime('2024-06-23', '%Y-%m-%d').date(),
+            time = '7:00 pm'
+        )
+
+        db.session.add(majorservice)
+
+        majorservice = MajorService(
+            name='Wednesday Service',
+            description='Wednesday Service',
+            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+            date = datetime.strptime('2024-06-26', '%Y-%m-%d').date(),
+            time = '7:00 pm',
+            is_active=False)
+        
+        db.session.add(majorservice)
+
+        majorservice = MajorService(
+            name='Friday Service',
+            description='Friday Service',
+            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+            is_active=False,
+            date = datetime.strptime('2024-12-28', '%Y-%m-%d').date(),
+            time = '7:00 pm'
+        )
+
+        db.session.add(majorservice)
          
 
-    
     if Events.query.count() == 0:
         new_upcoming_service = Events(
             name='Youth Conference',
@@ -69,7 +108,6 @@ with app.app_context():
             image_url='upload/events/2.jpeg'
         )
         db.session.add(new_upcoming_service)
-         
 
         
         new_major_event = Events(
@@ -77,7 +115,6 @@ with app.app_context():
             description='Youth Conference',
             image_url='upload/events/3.jpeg',
             date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
-
             time='5:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
         )

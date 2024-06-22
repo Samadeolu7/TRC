@@ -100,9 +100,17 @@ class CurrentLiveService(Resource):
     def get(self):
         current_date = datetime.now()
         #filter for the on that is active
-        services = LiveService.query.filter(LiveService.is_active == True).first
-        major_services = MajorService.query.filter(MajorService.is_active == True).first
+        services = LiveService.query.filter(LiveService.is_active == True).first()
+        major_services = MajorService.query.filter(MajorService.is_active == True).first()
         #return the earliest one
+        if services is None and major_services is None:
+            return {
+                'message': 'No live service available'
+            }
+        elif services is None:
+            return live_service_schema.dump(major_services)
+        elif major_services is None:
+            return live_service_schema.dump(services)
         if services.date < major_services.date:
             return live_service_schema.dump(services)
         else:
