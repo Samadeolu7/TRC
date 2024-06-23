@@ -26,7 +26,8 @@ with app.app_context():
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
             date = datetime.strptime('2024-06-23', '%Y-%m-%d').date(),
             time = '7:00 pm',
-            is_active=False
+            is_active=False,
+            speaker='Pastor John Doe',
         )
         db.session.add(new_live_service)
          
@@ -37,7 +38,9 @@ with app.app_context():
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
             date = datetime.strptime('2024-06-23', '%Y-%m-%d').date(),
             time = '7:00 pm',
-            is_active=True
+            is_active=True,
+            speaker='Pastor John Doe',
+            
         )
         db.session.add(new_live_service)
          
@@ -48,7 +51,8 @@ with app.app_context():
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
             is_active=False,
             date = datetime.strptime('2024-06-23', '%Y-%m-%d').date(),
-            time = '7:00 pm'
+            time = '7:00 pm',
+            speaker='Pastor John Doe',
         )
         db.session.add(new_live_service)
 
@@ -60,7 +64,8 @@ with app.app_context():
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
             is_active=False,
             date = datetime.strptime('2024-06-23', '%Y-%m-%d').date(),
-            time = '7:00 pm'
+            time = '7:00 pm',
+            speaker='Pastor John Doe',
         )
 
         db.session.add(majorservice)
