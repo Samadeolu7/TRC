@@ -99,7 +99,7 @@ with app.app_context():
             date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
             time='7:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            image_url='upload/events/1.jpeg'
+            image_url='upload/events/1.png'
         )
         db.session.add(new_upcoming_service)
          
