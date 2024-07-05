@@ -94,9 +94,9 @@ with app.app_context():
 
     if Events.query.count() == 0:
         new_upcoming_service = Events(
-            name='Youth Conference',
-            description='Youth Conference',
-            date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
+            name='Annual Convention',
+            description='Thanks Giving Service',
+            date=datetime.strptime('2024-09-08', '%Y-%m-%d').date(),
             time='7:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
             image_url='upload/events/1.png'
