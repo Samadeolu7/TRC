@@ -92,16 +92,16 @@ with app.app_context():
         db.session.add(majorservice)
          
 
-    if Events.query.count() == 0:
-        new_upcoming_service = Events(
-            name='Annual Convention',
-            description='Thanks Giving Service',
-            date=datetime.strptime('2024-09-08', '%Y-%m-%d').date(),
-            time='7:00 PM',
-            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            image_url='upload/events/trc-design-2.png'
-        )
-        db.session.add(new_upcoming_service)
+    # if Events.query.count() == 0:
+    #     new_upcoming_service = Events(
+    #         name='Annual Convention',
+    #         description='Thanks Giving Service',
+    #         date=datetime.strptime('2024-09-08', '%Y-%m-%d').date(),
+    #         time='7:00 PM',
+    #         url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+    #         image_url='upload/events/trc-design-2.png'
+    #     )
+    #     db.session.add(new_upcoming_service)
          
 
         new_upcoming_service = Events(
@@ -114,15 +114,15 @@ with app.app_context():
         )
         db.session.add(new_upcoming_service)
         
-        new_upcoming_service = Events(
-            name='Annual Convention',
-            description='Thanks Giving Service',
-            date=datetime.strptime('2024-09-08', '%Y-%m-%d').date(),
-            time='7:00 PM',
-            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            image_url='upload/events/1.png'
-        )
-        db.session.add(new_upcoming_service)
+        # new_upcoming_service = Events(
+        #     name='Annual Convention',
+        #     description='Thanks Giving Service',
+        #     date=datetime.strptime('2024-09-08', '%Y-%m-%d').date(),
+        #     time='7:00 PM',
+        #     url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+        #     image_url='upload/events/1.png'
+        # )
+        # db.session.add(new_upcoming_service)
          
 
         # new_major_event = Events(
