@@ -99,31 +99,30 @@ with app.app_context():
             date=datetime.strptime('2024-09-08', '%Y-%m-%d').date(),
             time='7:00 PM',
             url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-            image_url='upload/events/1.png'
+            image_url='upload/events/trc-design-2.png'
         )
         db.session.add(new_upcoming_service)
          
 
-        # new_upcoming_service = Events(
-        #     name='Youth Conference',
-        #     description='Youth Conference',
-        #     date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
-        #     time='5:00 PM',
-        #     url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
-        #     image_url='upload/events/2.jpeg'
-        # )
-        # db.session.add(new_upcoming_service)
-
+        new_upcoming_service = Events(
+            name='Annual Convention',
+            description='Thanks Giving Service',
+            date=datetime.strptime('2024-09-08', '%Y-%m-%d').date(),
+            time='7:00 PM',
+            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+            image_url='upload/events/trc-design-1.png'
+        )
+        db.session.add(new_upcoming_service)
         
-        # new_major_event = Events(
-        #     name='Youth Conference',
-        #     description='Youth Conference',
-        #     image_url='upload/events/3.jpeg',
-        #     date=datetime.strptime('2020-12-25', '%Y-%m-%d').date(),
-        #     time='5:00 PM',
-        #     url='https://www.youtube.com/watch?v=8c7B2v1b5wQ'
-        # )
-        # db.session.add(new_major_event)
+        new_upcoming_service = Events(
+            name='Annual Convention',
+            description='Thanks Giving Service',
+            date=datetime.strptime('2024-09-08', '%Y-%m-%d').date(),
+            time='7:00 PM',
+            url='https://www.youtube.com/watch?v=8c7B2v1b5wQ',
+            image_url='upload/events/1.png'
+        )
+        db.session.add(new_upcoming_service)
          
 
         # new_major_event = Events(
